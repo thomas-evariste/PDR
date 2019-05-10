@@ -8,6 +8,7 @@ class Player {
     public static void main(String args[]) {
 
 /////////////////////// INITIALISATION ////////////////////////////////////////////
+        ArrayList<Integer> cellulesNonConquises = new ArrayList<Integer>();
         
         Tools.remplirListIDContinent();
         Scanner in = new Scanner(System.in);
@@ -21,6 +22,7 @@ class Player {
        // Création des cellules et ajout à la pangée
         for (int i = 0; i < zoneCount; i++) { 
             int zoneId = in.nextInt(); // On récupère un ID de cellule
+            cellulesNonConquises.add(zoneId);
             int platinumSource = in.nextInt(); // Et son nombre de platinum
             Cellule cellule = new Cellule(zoneId, platinumSource); 
             pangee.addCellule(cellule);
@@ -39,33 +41,36 @@ class Player {
         }
         
         
-        
-        
         Graphe graphe = Tools.splitContinent( pangee ); 
-        Graphe grapheNonConquis = new Graphe(graphe);
         
-        int zID; //L'ID de la cellule qu'on manipulera
+        
+
         
 ////////////////  PROCEDURE A CHAQUE TOUR /////////////////////////////////////////
      
+        int zID; //L'ID de la cellule qu'on manipulera     
         while (true) {
             
             ////// PHASE DE RECUPERATION DE DONNEES //////
-            
-
+           
+            cellulesNonConquises.clear();
             int myPlatinum = in.nextInt(); // Mon platinum
             for (int i = 0; i < zoneCount; i++) {
+                
                 zID = in.nextInt(); // On récupère l'ID de la cellule
                 graphe.getCelluleById(i).setControl(in.nextInt());
+                if(graphe.getCelluleById(i).getControl()==-1){
+                    cellulesNonConquises.add(i);
+                }
                 for(int j=0; j<4; j++){
-                    graphe.getCelluleById(i).setRobots(j, in.nextInt());
+                    graphe.getCelluleById(i).setRobots(in.nextInt(), j);
                 }
             }
             
             // Si il reste des cellules non conquises on met le graphe des cellules non conquises à jour
-            if(!grapheNonConquis.isEmptyCase()){
-                Tools.miseAJourNonConquis(grapheNonConquis, graphe); 
-            }
+         //   if(!celluleNonConquises.isEmpty()){
+     //           Tools.miseAJourNonConquis(grapheNonConquis, graphe); 
+     //       }
             //Tools.miseAJourGraphe(listInfosTempsReel, graphe); //A corriger attention listInfosTempsReel n'existe plus
             
             
@@ -113,12 +118,12 @@ class Player {
             String placement = "";
             for(int i=0;i<nbMaxCree;i++){
                 // Si toutes les cellules sont possédées on se place aléatoirement sur l'une d'elles
-                if(grapheNonConquis.isEmptyCase()){
+                if(cellulesNonConquises.isEmpty()){
                     placement = placement + " 1 " + String.valueOf(Tools.positionAlea(graphe)) ;
                 } 
                 // Si il reste des cellules non possédées on se place aléatoirement sur l'une d'elles
                 else {
-                    placement = placement + " 1 " + String.valueOf(Tools.positionAlea(grapheNonConquis)) ;
+                    placement = placement + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises)) ;
                 }
             }
             
@@ -213,7 +218,7 @@ class Tools{
         
     }
         
-    static void miseAJourNonConquis(Graphe grapheNonConquis, Graphe graphe){ 
+ /*   static void miseAJourNonConquis(ArrayList<int> cellulesNonConquises, Graphe graphe){ 
         ArrayList<Integer> supp = new ArrayList<Integer>();
         for(Continent continent : grapheNonConquis.getContinents()){
             for(Cellule cellule : continent.getCellules()){
@@ -225,7 +230,7 @@ class Tools{
         for(int id : supp){
             grapheNonConquis.removeCelluleById(id);
         }
-    }
+    }*/
     
 /*    static void miseAJourPossessions(ArrayList<int[]> listInfosTempsReel,Graphe graphe){           //Plus adapté à la nouvelle modélisation
         for(int i = 0; i < graphe.sizeCellule();i++ ){
@@ -247,6 +252,12 @@ class Tools{
     
     static void miseAJourGraphe(Graphe graphe){
         miseAJourContinent(graphe);
+    }
+    
+    static int takeRandom(ArrayList<Integer> liste){
+        int taille = liste.size();
+        int rand = ThreadLocalRandom.current().nextInt(0, taille);
+        return liste.get(rand);
     }
     
     
@@ -625,10 +636,3 @@ class Continent {
     }
     
 }
-
-
-
-
-
-
-
