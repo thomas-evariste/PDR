@@ -42,6 +42,10 @@ class Player {
         
         
         Graphe graphe = Tools.splitContinent( pangee ); 
+		
+		for(Continent continent : graphe.getContinents()){
+			continent.calculDensitePlatinum();
+		}
         
         
 
@@ -523,30 +527,36 @@ class Graphe {
 class Continent {
     private ArrayList<Cellule> cellules;
     private int id;
+	private double densitePlatinum;
     
     Continent(){
         cellules = new ArrayList<Cellule>();
         id=-1;
+		densitePlatinum =0;
     }
     
     Continent(int id){
         cellules = new ArrayList<Cellule>();
         this.id=id;
+		densitePlatinum =0;
     }
     
     Continent(ArrayList<Cellule> cellules){
         this.cellules = cellules;
         id=-1;
+		densitePlatinum =0;
     }
     
     Continent(ArrayList<Cellule> cellules, int id){
         this.cellules = cellules;
         this.id=id;
+		densitePlatinum =0;
     }
     
     Continent(Continent continent){
         cellules = new ArrayList<Cellule>(continent.getCellules());
         id=continent.getId();
+		densitePlatinum =0;
     }
     
     ArrayList<Cellule> getCellules(){
@@ -556,6 +566,10 @@ class Continent {
     Cellule getCellule(int num){
         return cellules.get(num);
     }
+	
+	double getDensitePlatinum(){
+		return densitePlatinum;
+	}
     
     Cellule getCelluleById(int id){
         Cellule celluleVide = new Cellule();
@@ -571,6 +585,10 @@ class Continent {
     void setCellules(ArrayList<Cellule> cellules){
         this.cellules = cellules;
     }
+	
+	void setDensitePlatinum(double d){
+		densitePlatinum=d;
+	}
     
     void addCellule(Cellule cellule){
         cellules.add(cellule);
@@ -636,4 +654,14 @@ class Continent {
         return true;
     }
     
+	void calculDensitePlatinum(){
+		double comptPaltinum=0;
+		for(Cellule cellule : cellules){
+			comptPaltinum += cellule.getPlatinum();
+		}
+		
+		double densitePlatinum = comptPaltinum / ( (double) cellules.size());
+		this.densitePlatinum = densitePlatinum;
+		
+	}
 }
