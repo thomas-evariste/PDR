@@ -256,8 +256,9 @@ class Tools{
     
     static int takeRandom(ArrayList<Integer> liste){
         int taille = liste.size();
-        int rand = ThreadLocalRandom.current().nextInt(0, taille);
-        return liste.get(rand);
+        Random rand = new Random();
+        int hasard = rand.nextInt(taille);
+        return liste.get(hasard);
     }
     
     
