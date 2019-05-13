@@ -1,9 +1,7 @@
-
-package Model;
-
 import java.util.*;
 
-public class Player {
+
+class Player {
 
     public static void main(String args[]) {
 
@@ -160,11 +158,9 @@ public class Player {
         
 }
 
-package Model;
 
-import java.util.*;
 
-public class Tools{
+class Tools {
 
     static List<Integer> jap;
     static List<Integer> ameriqueDuN;
@@ -290,11 +286,9 @@ public class Tools{
     
     
 }
-package Model;
 
-import java.util.*;
 
-public class Graphe {
+class Graphe {
     private ArrayList<Continent> continents;
     
     public Graphe(){
@@ -454,11 +448,9 @@ public class Graphe {
         continents.get(idContinent).removeCelluleById(id);
     }
 }
-package Model;
 
-import java.util.ArrayList;
 
-public class Continent {
+class Continent {
 	private ArrayList<Cellule> cellules;
 	private int id;
 	private double densitePlatinum;
@@ -614,11 +606,9 @@ public class Continent {
 
 	}
 }
-package Model;
 
-import java.util.ArrayList;
 
-public class Cellule{
+class Cellule {
 
     private int id;
     private int controlePar;

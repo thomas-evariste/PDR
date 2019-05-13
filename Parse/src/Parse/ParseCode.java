@@ -15,7 +15,7 @@ public class ParseCode {
 			
 			PrintWriter printwriter = new PrintWriter(new FileOutputStream(f)); 
 
-			printwriter.println(""); 
+			printwriter.println("import java.util.*;"); 
 
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Player.java", printwriter);
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Tools.java", printwriter);
@@ -45,7 +45,27 @@ public class ParseCode {
 		BufferedReader buff=new BufferedReader(lecture);
 		String ligne;
 		while ((ligne=buff.readLine())!=null){
-			printwriter.println(ligne); 
+			if((!ligne.equals("package Model;"))&&(!ligne.equals("import java.util.*;"))){
+				if(ligne.equals("public class Player {")){
+					printwriter.println("class Player {"); 
+				}
+				else if(ligne.equals("public class Graphe {")){
+					printwriter.println("class Graphe {"); 
+				}
+				else if(ligne.equals("public class Tools{")){
+					printwriter.println("class Tools {"); 
+				}
+				else if(ligne.equals("public class Continent {")){
+					printwriter.println("class Continent {"); 
+				}
+				else if(ligne.equals("public class Cellule{")){
+					printwriter.println("class Cellule {"); 
+				}
+				else{
+					printwriter.println(ligne); 
+				}
+				
+			}
 			
 		}
 		buff.close(); 

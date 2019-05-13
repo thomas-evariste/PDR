@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Continent {
 	private ArrayList<Cellule> cellules;
