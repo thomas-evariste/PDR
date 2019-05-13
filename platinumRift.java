@@ -9,6 +9,10 @@ class Player {
 
 /////////////////////// INITIALISATION ////////////////////////////////////////////
         ArrayList<Integer> cellulesNonConquises = new ArrayList<Integer>();
+	    int i;
+	    int j;
+		int k;
+		int l;
         
         Tools.remplirListIDContinent();
         Scanner in = new Scanner(System.in);
@@ -16,27 +20,31 @@ class Player {
         int myId = in.nextInt(); // Notre ID
         int zoneCount = in.nextInt(); // Nombre de cellules
         int linkCount = in.nextInt(); // Nombre de frontières
-        
+        int zoneId;
+		int platinumSource;
         Continent pangee = new Continent();
         
        // Création des cellules et ajout à la pangée
-        for (int i = 0; i < zoneCount; i++) { 
-            int zoneId = in.nextInt(); // On récupère un ID de cellule
+        for (i = 0; i < zoneCount; i++) { 
+            zoneId = in.nextInt(); // On récupère un ID de cellule
             cellulesNonConquises.add(zoneId);
-            int platinumSource = in.nextInt(); // Et son nombre de platinum
+            platinumSource = in.nextInt(); // Et son nombre de platinum
             Cellule cellule = new Cellule(zoneId, platinumSource); 
             pangee.addCellule(cellule);
         }
+		
+		int zone1;
+		int zone2;
         // Mise en place des voisins
-        for (int i = 0; i < linkCount; i++) { 
-            int zone1 = in.nextInt();
-            int zone2 = in.nextInt();
+        for (i = 0; i < linkCount; i++) { 
+            zone1 = in.nextInt();
+            zone2 = in.nextInt();
             pangee.getCelluleById(zone1).addVoisin(zone2);
             pangee.getCelluleById(zone2).addVoisin(zone1);
         }
         
         // On trie les voisins de chaque cellule du plus au moins chargé en platinum
-        for(int i = 0 ; i < pangee.size() ; i++){ 
+        for(i = 0 ; i < pangee.size() ; i++){ 
             pangee.triVoisinDe(i);
         }
         
@@ -52,21 +60,30 @@ class Player {
         
 ////////////////  PROCEDURE A CHAQUE TOUR /////////////////////////////////////////
      
-        int zID; //L'ID de la cellule qu'on manipulera     
+        int zID; //L'ID de la cellule qu'on manipulera 
+		int myPlatinum;
+		String deplacementStr;
+		Cellule cellule;
+        List<Integer> deplacement = new ArrayList<Integer>();
+		int arrivee;
+		int voisin;
+		int nbMaxCree;
+		String placement;
+		Continent continent;
         while (true) {
             
             ////// PHASE DE RECUPERATION DE DONNEES //////
            
             cellulesNonConquises.clear();
-            int myPlatinum = in.nextInt(); // Mon platinum
-            for (int i = 0; i < zoneCount; i++) {
+            myPlatinum = in.nextInt(); // Mon platinum
+            for (i = 0; i < zoneCount; i++) {
                 
                 zID = in.nextInt(); // On récupère l'ID de la cellule
                 graphe.getCelluleById(i).setControl(in.nextInt());
                 if(graphe.getCelluleById(i).getControl()==-1){
                     cellulesNonConquises.add(i);
                 }
-                for(int j=0; j<4; j++){
+                for(j=0; j<4; j++){
                     graphe.getCelluleById(i).setRobots(in.nextInt(), j);
                 }
             }
@@ -82,21 +99,23 @@ class Player {
             
             ////////// PHASE DE DEPLACEMENT ////////////
 
-            String deplacementStr = "";
+            deplacementStr = "";
 
 
-            for(Continent continent : graphe.getContinents()){
-                for(Cellule cellule : continent.getCellules()){
-                    
+            for(j=0;j<graphe.size();j++){
+				continent=graphe.getContinent(j);
+                for(k=0;k<continent.size();k++){
+                    cellule = continent.getCellule(k);
                     // Si on a au moins un robot disponible sur la cellule
                     if( cellule.getRobots(myId) != 0 ){
-                        List<Integer> deplacement = new ArrayList<Integer>();   //A déplacer
+                        deplacement.clear(); 
                         // Pour chaque robot
-                        for(int i = 0 ; i < cellule.getRobots(myId) ; i++){
+                        for(i = 0 ; i < cellule.getRobots(myId) ; i++){
                         
-                            int arrivee = Tools.destination(cellule.getId(),graphe); //On récupère un voisin aléatoirement
+                            arrivee = Tools.destination(cellule.getId(),graphe); //On récupère un voisin aléatoirement
                             // Pour chaque voisin de notre cellule
-                            for (int voisin : cellule.getVoisins()){
+                            for (l=0;l<cellule.nbVoisins();l++){
+								voisin = cellule.getVoisin(l);
                                 // Si nous ne sommes pas propriétaire de la meilleure cellule voisine et qu'un autre robot venant de la cellule de départ n'a pas déjà fait ce déplacement on change l'arrivée
                                 if (( graphe.getCelluleById(voisin).getControl()!=myId) && (!deplacement.contains(voisin))){
                                     arrivee = voisin;
@@ -118,9 +137,9 @@ class Player {
             
             ///////////  PHASE D'ACHAT ET PLACEMENT DE NOUVEAUX ROBOTS ///////////////
             
-            int nbMaxCree = myPlatinum / 20;
-            String placement = "";
-            for(int i=0;i<nbMaxCree;i++){
+            nbMaxCree = myPlatinum / 20;
+            placement = "";
+            for(i=0;i<nbMaxCree;i++){
                 // Si toutes les cellules sont possédées on se place aléatoirement sur l'une d'elles
                 if(cellulesNonConquises.isEmpty()){
                     placement = placement + " 1 " + String.valueOf(Tools.positionAlea(graphe)) ;
@@ -181,8 +200,10 @@ class Tools{
         Continent antarctique = new Continent(2);
         Continent europeAsieOceanie = new Continent(3);
         Continent japon = new Continent(4);
-        
-        for ( Cellule cellule : continent.getCellules()){
+        Cellule cellule;
+		int i;
+        for (i=0;i<continent.size();i++){
+			cellule=continent.getCellule(i);
             int id = cellule.getId();
             
             if (ameriqueDuS.contains(id)){
@@ -244,12 +265,17 @@ class Tools{
     
     static void miseAJourContinent(Graphe graphe){
         ArrayList<Integer> supp = new ArrayList<Integer>();
-        for(Continent continent : graphe.getContinents()){
+		Continent continent;
+		int j;
+        for(j=0;j<graphe.size();j++){
+			continent=graphe.getContinent(j);
             if(continent.verifPoss()){
                 supp.add(continent.getId());
             }
         }
-        for(int s : supp){
+		int s;
+		for(j=0;j<supp.size();j++){
+			s=supp.get(j);
             graphe.removeContinentById(s);
         }
     }
@@ -289,7 +315,8 @@ class Cellule{
         this.voisins = voisins;
         controlePar=-1;
         robots = new int[4];
-        for(int i=0;i<4;i++){
+		int i;
+        for(i=0;i<4;i++){
             robots[i]=0;
         }
     }
@@ -300,7 +327,8 @@ class Cellule{
         voisins = new ArrayList<Integer>();
         controlePar=-1;
         robots = new int[4];
-        for(int i=0;i<4;i++){
+		int i;
+        for(i=0;i<4;i++){
             robots[i]=0;
         }
         
@@ -312,7 +340,8 @@ class Cellule{
         voisins = new ArrayList<Integer>();
         controlePar=-1;
         robots = new int[4];
-        for(int i=0;i<4;i++){
+		int i;
+        for(i=0;i<4;i++){
             robots[i]=0;
         }
     }
@@ -401,7 +430,10 @@ class Graphe {
     
     Graphe(Graphe graphe){
         continents = new ArrayList<Continent>();
-        for(Continent continent : graphe.getContinents()){
+		Continent continent;
+		int j;
+        for(j=0;j<graphe.size();j++){
+			continent=graphe.getContinent(j);
             continents.add(new Continent(continent));
         }
     }
@@ -416,7 +448,10 @@ class Graphe {
     
     Continent getContinentById(int id){
         Continent continentVide = new Continent();
-        for(Continent continent : continents){
+		Continent continent;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
             if(id==continent.getId()){
                 return continent;
             }
@@ -435,7 +470,10 @@ class Graphe {
     }
     
     void addContinents(ArrayList<Continent> continents){
-        for(Continent continent : continents){
+		Continent continent;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
             this.addContinent(continent);
         }
     }
@@ -445,7 +483,8 @@ class Graphe {
     }
     
     void removeContinentById(int id){
-        for(int i = 0; i< continents.size();i++){
+		int i;
+        for(i = 0; i< continents.size();i++){
             if(continents.get(i).getId()==id){
                 continents.remove(i);
                 i--;
@@ -459,7 +498,10 @@ class Graphe {
     
     int sizeCellule(){
         int taille = 0;
-        for(Continent continent : continents){
+		Continent continent;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
             taille += continent.size();
         }
         return taille;
@@ -470,7 +512,10 @@ class Graphe {
     }
     
     Boolean isEmptyCase(){
-        for(Continent continent : continents){
+		Continent continent;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
             if(!continent.isEmpty()){
                 return false;
             }
@@ -480,8 +525,14 @@ class Graphe {
     
     Cellule getCelluleById(int id){
         Cellule celluleVide = new Cellule();
-        for(Continent continent : continents){
-            for(Cellule cellule : continent.getCellules()){
+		Continent continent;
+		Cellule cellule;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
+			int k;
+			for(k=0;k<continent.size();k++){
+				cellule=continent.getCellule(k);
                 if(id==cellule.getId()){
                     return cellule;
                 }
@@ -494,8 +545,14 @@ class Graphe {
     Cellule getCellule(int num){
         Cellule celluleVide = new Cellule();
         int comptNum = 0;
-        for(Continent continent : continents){
-            for(Cellule cellule : continent.getCellules()){
+		Continent continent;
+		Cellule cellule;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
+			int k;
+			for(k=0;k<continent.size();k++){
+				cellule=continent.getCellule(k);
                 if(num==comptNum){
                     return cellule;
                 }
@@ -508,8 +565,14 @@ class Graphe {
     
     void removeCelluleById(int id){
         int idContinent = -1;
-        for(Continent continent : continents){
-            for(Cellule cellule : continent.getCellules()){
+		Continent continent;
+		Cellule cellule;
+		int j;
+        for(j=0;j<continents.size();j++){
+			continent=continents.get(j);
+			int k;
+			for(k=0;k<continent.size();k++){
+				cellule=continent.getCellule(k);
                 if(id==cellule.getId()){
                     idContinent = continent.getId();
                 }
@@ -573,7 +636,10 @@ class Continent {
     
     Cellule getCelluleById(int id){
         Cellule celluleVide = new Cellule();
-        for(Cellule cellule : cellules){
+		Cellule cellule;
+		int j;
+        for(j=0;j<cellules.size();j++){
+			cellule=cellules.get(j);
             if(id==cellule.getId()){
                 return cellule;
             }
@@ -595,7 +661,10 @@ class Continent {
     }
     
     void addCellules(ArrayList<Cellule> cellules){
-        for(Cellule cellule : cellules){
+		Cellule cellule;
+		int j;
+        for(j=0;j<cellules.size();j++){
+			cellule=cellules.get(j);
             this.addCellule(cellule);
         }
     }
@@ -605,7 +674,8 @@ class Continent {
     }
     
     void removeCelluleById(int id){
-        for(int i = 0; i< cellules.size();i++){
+		int i;
+        for(i = 0; i< cellules.size();i++){
             if(cellules.get(i).getId()==id){
                 cellules.remove(i);
                 i--;
@@ -624,8 +694,10 @@ class Continent {
     void triVoisinDe(int id){ // Classe les voisins du plus chargé en platinum au moins chargé en platinum  // Pas opti à changer en cas de limite de temps
         ArrayList<Integer> voisin = this.getCelluleById(id).getVoisins();
         ArrayList<Integer> voisinTrie = new ArrayList<Integer>();
-        for(int i = 0; i<7;i++){
-            for(int j = 0 ; j<voisin.size();j++){
+		int i;
+		int j;
+        for(i = 0; i<7;i++){
+            for(j = 0 ; j<voisin.size();j++){
                 if(this.getCelluleById(voisin.get(j)).getPlatinum()==(6-i)){
                     voisinTrie.add(voisin.get(j));
                 }
@@ -643,7 +715,8 @@ class Continent {
     }
     
     Boolean verifPoss(){
-        for(int i =0; i< cellules.size()-1;i++){
+		int i;
+        for(i =0; i< cellules.size()-1;i++){
             if(cellules.get(i).getControl()!=cellules.get(i+1).getControl()){
                 return false;
             }
@@ -656,7 +729,10 @@ class Continent {
     
 	void calculDensitePlatinum(){
 		double comptPaltinum=0;
-		for(Cellule cellule : cellules){
+		Cellule cellule;
+		int j;
+        for(j=0;j<cellules.size();j++){
+			cellule=cellules.get(j);
 			comptPaltinum += cellule.getPlatinum();
 		}
 		
