@@ -50,10 +50,14 @@ public class Player {
         
         Graphe graphe = Tools.splitContinent( pangee ); 
 		
+        System.err.println("nb case : " + graphe.sizeCellule());
+        
+        
 		for(Continent continent : graphe.getContinents()){
 			continent.calculDensitePlatinum();
-			continent.setCellules(continent.triParPlatinum());
+			continent.triParPlatinum();
 		}
+        System.err.println("nb case : " + graphe.sizeCellule());
         
         cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 

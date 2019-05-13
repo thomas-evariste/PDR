@@ -158,17 +158,19 @@ public class Continent {
 
 	}
 	
-	public ArrayList<Cellule> triParPlatinum() {
+	public void triParPlatinum() {
 		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
 		int i;
 		int j;
+		Cellule cellule;
 		for(i=0; i<7; i++) {
-			for(j=0; j<cellulesTriees.size();j++){
-				if (this.getCelluleById(j).getPlatinum() == (6 - i)) {
-					cellulesTriees.add(cellules.get(j));
+			for (j = 0; j < cellules.size(); j++) {
+				cellule = cellules.get(j);
+				if (cellule.getPlatinum() == (6 - i)) {
+					cellulesTriees.add(cellule);
 				}
 			}
 		}
-		return cellulesTriees;
+		cellules = cellulesTriees;
 	}
 }

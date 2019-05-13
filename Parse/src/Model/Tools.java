@@ -141,8 +141,8 @@ public class Tools{
     	String sortie = "";
     	int compteur=0;
     	while(nbMaxCree != 0) {
-    		if(!cellulesNonConquises.isEmpty() && cellulesNonConquises.size()>compteur) {
-    			sortie = sortie + "1" + String.valueOf(cellulesNonConquises.get(0));
+    		if((!cellulesNonConquises.isEmpty()) && cellulesNonConquises.size()>compteur) {
+    			sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(compteur));
     			nbMaxCree--;
     			compteur++;
     		}
