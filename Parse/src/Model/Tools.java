@@ -148,6 +148,7 @@ public class Tools{
     		}
     		else {
     			sortie = sortie + " 1 " + String.valueOf(Tools.positionAlea(graphe));
+    			nbMaxCree--;
     		}
     	}
     	return sortie;
