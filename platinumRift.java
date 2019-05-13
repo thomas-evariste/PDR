@@ -51,9 +51,10 @@ class Player {
 		
 		for(Continent continent : graphe.getContinents()){
 			continent.calculDensitePlatinum();
+			continent.setCellules(continent.triParPlatinum());
 		}
         
-        
+        cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
         
 ////////////////  PROCEDURE A CHAQUE TOUR /////////////////////////////////////////
@@ -68,30 +69,22 @@ class Player {
 		int nbMaxCree;
 		String placement;
 		Continent continent;
-        while (true) {
+		while (true) {
             
             ////// PHASE DE RECUPERATION DE DONNEES //////
            
-            cellulesNonConquises.clear();
-            myPlatinum = in.nextInt(); // Mon platinum
+			myPlatinum = in.nextInt(); // Mon platinum
             for (i = 0; i < zoneCount; i++) {
                 
                 zID = in.nextInt(); // On récupère l'ID de la cellule
                 graphe.getCelluleById(i).setControl(in.nextInt());
-                if(graphe.getCelluleById(i).getControl()==-1){
-                    cellulesNonConquises.add(i);
+                if(cellulesNonConquises.contains(i) && (graphe.getCelluleById(i).getControl() != -1)) {
+                	cellulesNonConquises.remove(i);
                 }
                 for(j=0; j<4; j++){
                     graphe.getCelluleById(i).setRobots(in.nextInt(), j);
                 }
             }
-            
-            // Si il reste des cellules non conquises on met le graphe des cellules non conquises à jour
-         //   if(!celluleNonConquises.isEmpty()){
-     //           Tools.miseAJourNonConquis(grapheNonConquis, graphe); 
-     //       }
-            //Tools.miseAJourGraphe(listInfosTempsReel, graphe); //A corriger attention listInfosTempsReel n'existe plus
-            
             
             
             
@@ -137,16 +130,8 @@ class Player {
             
             nbMaxCree = myPlatinum / 20;
             placement = "";
-            for(i=0;i<nbMaxCree;i++){
-                // Si toutes les cellules sont possédées on se place aléatoirement sur l'une d'elles
-                if(cellulesNonConquises.isEmpty()){
-                    placement = placement + " 1 " + String.valueOf(Tools.positionAlea(graphe)) ;
-                } 
-                // Si il reste des cellules non possédées on se place aléatoirement sur l'une d'elles
-                else {
-                    placement = placement + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises)) ;
-                }
-            }
+            placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe);
+
             
             if(placement==""){placement="WAIT";}
             
@@ -284,6 +269,62 @@ class Tools {
         return liste.get(hasard);
     }
     
+    public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+    	String sortie = "";
+    	if (playerCount == 2) {
+    		sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe);
+    	}
+    	else {
+    		sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe);
+    	}
+    	return sortie;
+    }
+    
+    public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe){
+    	String sortie = "";
+    	int compteur=0;
+    	while(nbMaxCree != 0) {
+    		if(!cellulesNonConquises.isEmpty() && cellulesNonConquises.size()>compteur) {
+    			sortie = sortie + "1" + String.valueOf(cellulesNonConquises.get(0));
+    			nbMaxCree--;
+    			compteur++;
+    		}
+    		else {
+    			sortie = sortie + " 1 " + String.valueOf(Tools.positionAlea(graphe));
+    		}
+    	}
+    	return sortie;
+    }
+    
+    public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+    	String sortie = "";
+    	for(int i=0;i<nbMaxCree;i++){
+    		// Si toutes les cellules sont possédées on se place aléatoirement sur l'une d'elles
+    		if(cellulesNonConquises.isEmpty()){
+    			sortie = sortie + " 1 " + String.valueOf(Tools.positionAlea(graphe));
+    		} 
+    		// Si il reste des cellules non possédées on se place aléatoirement sur l'une d'elles
+    		else {
+    			sortie = sortie + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises)) ;
+    		}
+    	}
+    	return sortie;
+    }
+    
+    public static ArrayList<Integer> triCellulesNonConquises(ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+    	ArrayList<Integer> tableauTrie = new ArrayList<Integer>();
+    	int i;
+		int j;
+		for(i=0; i<7; i++) {
+			for(j=0; j<cellulesNonConquises.size();j++){
+				if (graphe.getCelluleById(cellulesNonConquises.get(j)).getPlatinum() == (6 - i)) {
+					tableauTrie.add(cellulesNonConquises.get(j));
+				}
+			}
+		}
+    	return tableauTrie;
+    }
+    	
     
 }
 
@@ -447,6 +488,7 @@ class Graphe {
         }
         continents.get(idContinent).removeCelluleById(id);
     }
+    
 }
 
 
@@ -604,6 +646,20 @@ class Continent {
 		double densitePlatinum = comptPlatinum / ((double) cellules.size());
 		this.densitePlatinum = densitePlatinum;
 
+	}
+	
+	public ArrayList<Cellule> triParPlatinum() {
+		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
+		int i;
+		int j;
+		for(i=0; i<7; i++) {
+			for(j=0; j<cellulesTriees.size();j++){
+				if (this.getCelluleById(j).getPlatinum() == (6 - i)) {
+					cellulesTriees.add(cellules.get(j));
+				}
+			}
+		}
+		return cellulesTriees;
 	}
 }
 

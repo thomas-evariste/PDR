@@ -157,4 +157,18 @@ public class Continent {
 		this.densitePlatinum = densitePlatinum;
 
 	}
+	
+	public ArrayList<Cellule> triParPlatinum() {
+		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
+		int i;
+		int j;
+		for(i=0; i<7; i++) {
+			for(j=0; j<cellulesTriees.size();j++){
+				if (this.getCelluleById(j).getPlatinum() == (6 - i)) {
+					cellulesTriees.add(cellules.get(j));
+				}
+			}
+		}
+		return cellulesTriees;
+	}
 }
