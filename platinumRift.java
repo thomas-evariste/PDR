@@ -728,15 +728,15 @@ class Continent {
     }
     
 	void calculDensitePlatinum(){
-		double comptPaltinum=0;
+		double comptPlatinum=0;
 		Cellule cellule;
 		int j;
         for(j=0;j<cellules.size();j++){
 			cellule=cellules.get(j);
-			comptPaltinum += cellule.getPlatinum();
+			comptPlatinum += cellule.getPlatinum();
 		}
 		
-		double densitePlatinum = comptPaltinum / ( (double) cellules.size());
+		double densitePlatinum = comptPlatinum / ( (double) cellules.size());
 		this.densitePlatinum = densitePlatinum;
 		
 	}
