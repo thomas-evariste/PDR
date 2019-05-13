@@ -21,6 +21,8 @@ public class ParseCode {
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Graphe.java", printwriter);
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Continent.java", printwriter);
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Cellule.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/ListDistance.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Distance.java", printwriter);
 
 			printwriter.close(); 
 
@@ -58,7 +60,13 @@ public class ParseCode {
 					printwriter.println("class Continent {"); 
 				}
 				else if(ligne.equals("public class Cellule{")){
-					printwriter.println("class Cellule {"); 
+					printwriter.println("class Cellule {"); ; 
+				}
+				else if(ligne.equals("public class Distance {")){
+					printwriter.println("class Distance {"); ; 
+				}
+				else if(ligne.equals("public class ListDistance {")){
+					printwriter.println("class ListDistance {"); 
 				}
 				else{
 					printwriter.println(ligne); 
