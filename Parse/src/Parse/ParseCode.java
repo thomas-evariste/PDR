@@ -1,0 +1,59 @@
+package Parse;
+
+import java.io.*;
+
+import Model.Graphe;
+
+public class ParseCode {
+
+	public static void main(String[] args) {
+
+		String f="C:/DATA/ISIC/PDR/PDR/platinumRift.java";
+
+		try { 
+
+			
+			PrintWriter printwriter = new PrintWriter(new FileOutputStream(f)); 
+
+			printwriter.println(""); 
+
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Player.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Tools.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Graphe.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src//Model/Continent.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Cellule.java", printwriter);
+
+			printwriter.close(); 
+
+			} 
+
+			catch (Exception ex) { 
+
+				System.out.println("Error clear file"+f); 
+
+			} 
+
+
+	}
+	
+	public static void write(String f, PrintWriter printwriter) throws IOException{
+		InputStream flux;
+		try {
+			flux = new FileInputStream(f);
+		
+		InputStreamReader lecture=new InputStreamReader(flux);
+		BufferedReader buff=new BufferedReader(lecture);
+		String ligne;
+		while ((ligne=buff.readLine())!=null){
+			printwriter.println(ligne); 
+			
+		}
+		buff.close(); 
+		}
+		 catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+
+}
