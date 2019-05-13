@@ -2,7 +2,6 @@ package Parse;
 
 import java.io.*;
 
-import Model.Graphe;
 
 public class ParseCode {
 
