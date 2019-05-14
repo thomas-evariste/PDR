@@ -8,8 +8,7 @@ public class ParseMain {
 
 	public static void main(String[] args) throws IOException {
 		Graphe graphe = ParseTexteToGraphe.parse();
-		System.out.println("/////////////////////////////////////////////////////////////////////////////");
-		ArrayList<ListDistance> list = CreateListDistance.create(graphe);
+		ArrayList<ListDistance> list = ParseDataToListDistance.parse(graphe);
 	}
 
 }

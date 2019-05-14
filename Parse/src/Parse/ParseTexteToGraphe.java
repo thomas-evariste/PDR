@@ -19,7 +19,6 @@ public class ParseTexteToGraphe {
 		Boolean newCellule = false;
 		int comptCellule =-1;
 		while ((ligne=buff.readLine())!=null){
-			System.out.println(ligne);
 			if(ligne.equals("continent")){
 				Continent continent = new Continent();
 				newContinent=true;
