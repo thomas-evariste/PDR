@@ -141,6 +141,7 @@ public class Graphe {
             }
         }
         System.err.println("pas assez de cellules: " + num);
+        System.err.println(""+ comptNum);
         return celluleVide;
     }
     

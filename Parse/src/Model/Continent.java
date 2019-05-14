@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Continent {
 	private ArrayList<Cellule> cellules;
@@ -59,7 +59,6 @@ public class Continent {
 				return cellule;
 			}
 		}
-		System.err.println("cellule pas dans le graphe: " + id);
 		return celluleVide;
 	}
 
@@ -184,21 +183,27 @@ public class Continent {
 		return compteur;
 	}
 	
-	public Boolean estControleParUnJoueur(){
-		int compteur[] = new int[4];
-		for(int i=0;i<4;i++) {
+	public Boolean estExploitable(int myId){
+		int compteur[] = new int[2];
+		for(int i=0;i<2;i++) {
 			compteur[i]=0;
 		}
 		for(int j=0; j<cellules.size();j++) {
-			if(getCelluleById(j).getControl() !=-1) {
-				compteur[getCelluleById(j).getControl()]++;
+			if(getCellule(j).getControl() !=-1) {
+				if(getCellule(j).getControl() == myId) {
+					compteur[0]++;
+				}
+				else {
+					compteur[1]++;
+				}
 			}
 		}
-		for(int k=0;k<4;k++) {
+		for(int k=0;k<2;k++) {
 			if(compteur[k]==cellules.size()) {
-				return true;
+				System.err.println("Je renvoie false" + id);
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 }

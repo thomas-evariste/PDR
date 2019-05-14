@@ -119,17 +119,17 @@ public class Tools {
 	}
 
 	public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises,
-			Graphe graphe) {
+			Graphe graphe, int myId) {
 		String sortie = "";
 		if (playerCount == 2) {
-			sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe);
+			sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe, myId);
 		} else {
-			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe);
+			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
 		}
 		return sortie;
 	}
 
-	public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+	public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe, int myId) {
 		String sortie = "";
 		int compteur = 0;
 		while (nbMaxCree != 0) {
@@ -145,20 +145,20 @@ public class Tools {
 				nbMaxCree--;
 				compteur++;
 			} else {
-				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, true));
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
 				nbMaxCree--;
 			}
 		}
 		return sortie;
 	}
 
-	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe, int myId) {
 		String sortie = "";
 		for (int i = 0; i < nbMaxCree; i++) {
 			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
 			// d'elles
 			if (cellulesNonConquises.isEmpty()) {
-				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, true));
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
 			}
 			// Si il reste des cellules non possédées on se place aléatoirement sur l'une
 			// d'elles
@@ -183,19 +183,18 @@ public class Tools {
 		return tableauTrie;
 	}
 
-	public static int positionAleaV2(Graphe graphe, Boolean bool) { // On récupère une cellule au hasard sur le graphe
+	public static int positionAleaV2(Graphe graphe,int myId, Boolean bool) { // On récupère une cellule au hasard sur le graphe
 		Graphe grapheLocal = new Graphe(graphe);
 		if (bool) {
-			for (Continent continent : grapheLocal.getContinents()) {
-				if (continent.estControleParUnJoueur()) {
+			for (Continent continent : graphe.getContinents()) {
+				if (!continent.estExploitable(myId)) {
 					grapheLocal.removeContinentById(continent.getId());
 				}
 			}
 		}
-
 		Random rand = new Random();
-		int pos = grapheLocal.getCellule(rand.nextInt(graphe.sizeCellule())).getId();
-		return pos;
+		int id = grapheLocal.getCellule(rand.nextInt(grapheLocal.sizeCellule())).getId();
+		return id;
 	}
 
 }

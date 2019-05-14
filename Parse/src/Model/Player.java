@@ -51,13 +51,11 @@ public class Player {
 
 		Graphe graphe = Tools.splitContinent(pangee);
 
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		for (Continent continent : graphe.getContinents()) {
 			continent.calculDensitePlatinum();
 			continent.triParPlatinum();
 		}
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
@@ -156,7 +154,7 @@ public class Player {
 
 			nbMaxCree = myPlatinum / 20;
 			placement = "";
-			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe);
+			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe, myId);
 
 			if (placement == "") {
 				placement = "WAIT";
