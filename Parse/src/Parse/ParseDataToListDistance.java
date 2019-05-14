@@ -24,13 +24,13 @@ public class ParseDataToListDistance {
 			if (continent.size() == 3) {
 				listDistance = createListUnContinent(japon, continent);
 			} else if (continent.size() == 33) {
-				listDistance = createListUnContinent(ameriqueNord, continent);
+				//listDistance = createListUnContinent(ameriqueNord, continent);
 			} else if (continent.size() == 44) {
-				listDistance = createListUnContinent(ameriqueSud, continent);
+				//listDistance = createListUnContinent(ameriqueSud, continent);
 			} else if (continent.size() == 7) {
 				listDistance = createListUnContinent(antartic, continent);
 			} else if (continent.size() == 67) {
-				listDistance = createListUnContinent(eurasie, continent);
+				//listDistance = createListUnContinent(eurasie, continent);
 			} else {
 				System.out.println("pb : size = " + continent.size());
 			}
@@ -44,14 +44,17 @@ public class ParseDataToListDistance {
 	public static ListDistance createListUnContinent(int[] cont, Continent continent) {
 		ListDistance listDistance = new ListDistance();
 
+
 		for (int i = 0; i < cont.length; i++) {
 			Distance distance = new Distance(cont[i]);
 			for (int j = 0; j < cont.length; j++) {
 				if (i != j) {
 					int dist = distance(cont[i], cont[j], continent);
+					System.err.println("les cellules sont : " +cont[i] +" : " +cont[j] +" et on une distance de "+ dist);
 					distance.getDistByDistance(dist).add(cont[j]);
 				}
 			}
+			distance.triBlocList();
 			listDistance.add(distance);
 		}
 
@@ -64,19 +67,24 @@ public class ParseDataToListDistance {
 	}
 
 	public static int parcour(int idCherche, int idPos, Continent continent, ArrayList<Integer> parcouru, int compt) {
-		if (compt > 21) {
+		parcouru.add(idPos);
+		if (compt > 28) {
 			return -1;
 		}
 		if (continent.getCelluleById(idPos).getVoisins().contains(idCherche)) {
 			return compt + 1;
 		}
 		int save = 21;
-		for (Cellule cellule : continent.getCellules()) {
+		for (int idcellule : continent.getCelluleById(idPos).getVoisins()) {
+			Cellule cellule = continent.getCelluleById(idcellule);
 			if (!parcouru.contains(cellule.getId())) {
 				parcouru.add(cellule.getId());
 				int res = parcour(idCherche, cellule.getId(), continent, parcouru, compt + 1);
-				if (save > res) {
-					save = res;
+				if ((res != -1)) {
+					System.err.println("on est à "+ cellule.getId()+" avec un res de"+res);
+					if (save > res) {
+						save = res;
+					}
 				}
 			}
 		}

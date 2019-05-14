@@ -6,10 +6,15 @@ public class BlocDistance {
 
 	private ArrayList<Integer> ids;
 	private int distance;
-	
+
 	public BlocDistance(){
 		ids = new ArrayList<Integer>();
 		distance=-1;
+	}
+
+	public BlocDistance(int distance){
+		ids = new ArrayList<Integer>();
+		this.distance=distance;
 	}
 	
 	public void add(int id){
