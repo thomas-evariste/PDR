@@ -96,6 +96,8 @@ public class Player {
 					graphe.getCelluleById(i).setRobots(in.nextInt(), j);
 				}
 			}
+			
+			
 
 			////////// PHASE DE DEPLACEMENT ////////////
 

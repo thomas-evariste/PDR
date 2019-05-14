@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Continent {
 	private ArrayList<Cellule> cellules;
@@ -107,8 +107,8 @@ public class Continent {
 	}
 
 	public void triVoisinDe(int id) { // Classe les voisins du plus chargé en platinum
-								// au moins chargé en platinum // Pas opti à
-								// changer en cas de limite de temps
+		// au moins chargé en platinum // Pas opti à
+		// changer en cas de limite de temps
 		ArrayList<Integer> voisin = this.getCelluleById(id).getVoisins();
 		ArrayList<Integer> voisinTrie = new ArrayList<Integer>();
 		int i;
@@ -157,13 +157,13 @@ public class Continent {
 		this.densitePlatinum = densitePlatinum;
 
 	}
-	
+
 	public void triParPlatinum() {
 		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
 		int i;
 		int j;
 		Cellule cellule;
-		for(i=0; i<7; i++) {
+		for (i = 0; i < 7; i++) {
 			for (j = 0; j < cellules.size(); j++) {
 				cellule = cellules.get(j);
 				if (cellule.getPlatinum() == (6 - i)) {
@@ -172,5 +172,33 @@ public class Continent {
 			}
 		}
 		cellules = cellulesTriees;
+	}
+
+	public int nombreDeCellulesControlees() {
+		int compteur = 0;
+		for (int i = 0; i < cellules.size(); i++) {
+			if (getCelluleById(i).getControl() != -1) {
+				compteur++;
+			}
+		}
+		return compteur;
+	}
+	
+	public Boolean estControleParUnJoueur(){
+		int compteur[] = new int[4];
+		for(int i=0;i<4;i++) {
+			compteur[i]=0;
+		}
+		for(int j=0; j<cellules.size();j++) {
+			if(getCelluleById(j).getControl() !=-1) {
+				compteur[getCelluleById(j).getControl()]++;
+			}
+		}
+		for(int k=0;k<4;k++) {
+			if(compteur[k]==cellules.size()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
