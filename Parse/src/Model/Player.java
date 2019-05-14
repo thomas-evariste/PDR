@@ -72,6 +72,7 @@ public class Player {
 		int nbMaxCree;
 		String placement;
 		Continent continent;
+		boolean premierTour = true;
 		while (true) {
 
 			////// PHASE DE RECUPERATION DE DONNEES //////
@@ -154,13 +155,16 @@ public class Player {
 
 			nbMaxCree = myPlatinum / 20;
 			placement = "";
-			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe, myId);
-
+			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe, myId, premierTour);
 			if (placement == "") {
 				placement = "WAIT";
 			}
 
 			System.out.println(placement);
+			
+			if(premierTour) {
+				premierTour = false;
+			}
 		}
 	}
 

@@ -119,17 +119,23 @@ public class Tools {
 	}
 
 	public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises,
-			Graphe graphe, int myId) {
+			Graphe graphe, int myId, boolean premierTour) {
 		String sortie = "";
 		if (playerCount == 2) {
-			sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe, myId);
+			if (premierTour) {
+				sortie = nouveauPlacement1v1PremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
+			} else {
+				sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe, myId);
+			}
+
 		} else {
 			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
 		}
 		return sortie;
 	}
 
-	public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe, int myId) {
+	public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
 		String sortie = "";
 		int compteur = 0;
 		while (nbMaxCree != 0) {
@@ -152,16 +158,29 @@ public class Tools {
 		return sortie;
 	}
 
-	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe, int myId) {
+	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
 		String sortie = "";
+		int parcourtNonConquis = 0;
 		for (int i = 0; i < nbMaxCree; i++) {
+
 			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
-			// d'elles
+			// d'elles hormis sur un continent inexploitable.
+
 			if (cellulesNonConquises.isEmpty()) {
 				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
 			}
-			// Si il reste des cellules non possédées on se place aléatoirement sur l'une
-			// d'elles
+
+			// Pour chaque robot à placer on prend la plus grande mine non conquise et on se
+			// place sur une case voisine si possible sinon on se place directement dessus
+
+			else if (parcourtNonConquis < cellulesNonConquises.size()) {
+				sortie = sortie + " 1 "
+						+ String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, parcourtNonConquis, graphe));
+				parcourtNonConquis++;
+			}
+			// Si il y a plus de robots que de cases libres on met les derniers
+			// aléatoirement sur des cases libres
 			else {
 				sortie = sortie + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises));
 			}
@@ -183,7 +202,8 @@ public class Tools {
 		return tableauTrie;
 	}
 
-	public static int positionAleaV2(Graphe graphe,int myId, Boolean bool) { // On récupère une cellule au hasard sur le graphe
+	public static int positionAleaV2(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
+																				// le graphe
 		Graphe grapheLocal = new Graphe(graphe);
 		if (bool) {
 			for (Continent continent : graphe.getContinents()) {
@@ -192,9 +212,45 @@ public class Tools {
 				}
 			}
 		}
+		ArrayList<Integer> mesCellules = new ArrayList<Integer>();
+		for (Continent continent : grapheLocal.getContinents()) {
+			for (Cellule cellule : continent.getCellules()) {
+				if (cellule.getControl() == myId) {
+					mesCellules.add(cellule.getId());
+				}
+			}
+		}
+
 		Random rand = new Random();
-		int id = grapheLocal.getCellule(rand.nextInt(grapheLocal.sizeCellule())).getId();
+		int id = mesCellules.get(rand.nextInt(mesCellules.size()));
 		return id;
+	}
+
+	// Pour n ième plus grande mine non conquise (n = parcourtNonConquis) on trouve
+	// un voisin libre et on s'y implante si ce n'est pas possible on se place sur
+	// la mine directement
+	public static int takeProcheGrandeMine(ArrayList<Integer> cellulesNonConquises, int parcourtNonConquis,
+			Graphe graphe) {
+		Cellule maCellule = graphe.getCelluleById(cellulesNonConquises.get(parcourtNonConquis));
+		for (int voisin : maCellule.getVoisins()) {
+			if (graphe.getCelluleById(voisin).getControl() == -1) {
+				return voisin;
+			}
+		}
+		return maCellule.getId();
+	}
+
+	public static String nouveauPlacement1v1PremierTour(int nbMaxCree, ArrayList<Integer> cellulesNonConquises,
+			Graphe graphe, int myId) {
+		String sortie = "";
+		int compteur = 0;
+		for (int i = 0; i < 3; i++) {
+			sortie = sortie + " 2 " + String.valueOf(cellulesNonConquises.get(i));
+		}
+		for (int i = 3; i < 7; i++) {
+			sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(i));
+		}
+		return sortie;
 	}
 
 }
