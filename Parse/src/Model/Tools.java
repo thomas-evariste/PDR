@@ -16,13 +16,6 @@ public class Tools {
 		return arrivee;
 	}
 
-	public static int positionAlea(Graphe graphe) { // On récupère une cellule au hasard sur le graphe
-		Random rand = new Random();
-		int pos = graphe.getCellule(rand.nextInt(graphe.sizeCellule())).getId();
-		return pos;
-	}
-
-	// static int[] classementCellulesDepart(Graphe graphe){}
 
 	public static Graphe splitContinent(Continent continent) { // Initialisation des continents
 		Graphe graphe = new Graphe();
@@ -158,7 +151,7 @@ public class Tools {
 				nbMaxCree--;
 				compteur++;
 			} else {
-				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+				sortie = sortie + " 1 " + String.valueOf(Tools.position(graphe, myId, true));
 				nbMaxCree--;
 			}
 		}
@@ -189,7 +182,7 @@ public class Tools {
 		return tableauTrie;
 	}
 
-	public static int positionAleaV2(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
+	public static int position(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
 																				// le graphe
 		Graphe grapheLocal = new Graphe(graphe);
 		if (bool) {
@@ -272,7 +265,7 @@ public class Tools {
 			// des notres hormis sur un continent inexploitable.
 
 			if (cellulesNonConquises.isEmpty()) {
-				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+				sortie = sortie + " 1 " + String.valueOf(Tools.position(graphe, myId, true));
 			}
 			// On se place sur les meilleurs mines non conquises, si on a plus de robots que
 			// de cellules non conquises les meilleures pourront en recevoir plusieurs
