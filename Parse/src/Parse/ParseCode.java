@@ -222,6 +222,24 @@ public class ParseCode {
 							ligne = ligne.substring(0, i+1) + "E" + ligne.substring(i + 7);
 						}
 					}
+					change = true;
+					while (change) {
+						int i = ligne.indexOf("Graphe");
+						if (i == -1) {
+							change = false;
+						} else {
+							ligne = ligne.substring(0, i+1) + "G" + ligne.substring(i + 6);
+						}
+					}
+					change = true;
+					while (change) {
+						int i = ligne.indexOf("graphe");
+						if (i == -1) {
+							change = false;
+						} else {
+							ligne = ligne.substring(0, i+1) + "g" + ligne.substring(i + 6);
+						}
+					}
 					
 					
 					

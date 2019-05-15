@@ -32,13 +32,13 @@ pangee.getCEById(zone2).addVoisin(zone1);
 for(i=0;i<pangee.size();i++){
 pangee.triVoisinDe(i);
 }
-Graphe graphe=Tools.splitC(pangee);
-for(C c:graphe.getCs()){
+GG gg=Tools.splitC(pangee);
+for(C c:gg.getCs()){
 c.calculDensitePlatinum();
 c.triParPlatinum();
 }
-cesNonConquises=Tools.CreeCEsNonConquisesParC(graphe);
-cesNonConquises=Tools.triCEsNonConquises(cesNonConquises, graphe);
+cesNonConquises=Tools.CreeCEsNonConquisesParC(gg);
+cesNonConquises=Tools.triCEsNonConquises(cesNonConquises, gg);
 ArrayList<ListD>list=CreerD.creer();
 int zID;
 int myPlatinum;
@@ -55,8 +55,8 @@ while (true){
 myPlatinum=in.nextInt();
 for(i=0;i<zoneCount;i++){
 zID=in.nextInt();
-graphe.getCEById(i).setControl(in.nextInt());
-if((graphe.getCEById(i).getControl() !=-1)){
+gg.getCEById(i).setControl(in.nextInt());
+if((gg.getCEById(i).getControl() !=-1)){
 for(j=0;j<cesNonConquises.size();j++){
 if(i==cesNonConquises.get(j)){
 cesNonConquises.remove(j);
@@ -65,21 +65,21 @@ break;
 }
 }
 for(j=0;j<4;j++){
-graphe.getCEById(i).setRobots(in.nextInt(), j);
+gg.getCEById(i).setRobots(in.nextInt(), j);
 }
 }
 deplacementStr="";
-for(j=0;j<graphe.size();j++){
-c=graphe.getC(j);
+for(j=0;j<gg.size();j++){
+c=gg.getC(j);
 for(k=0;k<c.size();k++){
 ce=c.getCE(k);
 if(ce.getRobots(myId) !=0){
 deplacement.clear();
 for(i=0;i<ce.getRobots(myId);i++){
-arrivee=Tools.destination(ce.getId(), graphe);
+arrivee=Tools.destination(ce.getId(), gg);
 for(l=0;l<ce.nbVoisins();l++){
 voisin=ce.getVoisin(l);
-if((graphe.getCEById(voisin).getControl() !=myId)
+if((gg.getCEById(voisin).getControl() !=myId)
 && (!deplacement.contains(voisin))){
 arrivee=voisin;
 deplacement.add(arrivee);
@@ -97,7 +97,7 @@ deplacementStr="WAIT";
 System.out.println(deplacementStr);
 nbMaxCree=myPlatinum / 20;
 placement="";
-placement=Tools.nouveauPlacement(nbMaxCree, playerCount, cesNonConquises, graphe, myId, premierTour);
+placement=Tools.nouveauPlacement(nbMaxCree, playerCount, cesNonConquises, gg, myId, premierTour);
 if(placement==""){
 placement="WAIT";
 }
@@ -113,19 +113,19 @@ static List<Integer>jap;
 static List<Integer>ameriqueDuN;
 static List<Integer>ameriqueDuS;
 static List<Integer>antarct;
-static int destination(int idCE, Graphe graphe){
+static int destination(int idCE, GG gg){
 Random rand=new Random();
-int arrivee=graphe.getCEById(idCE)
-.getVoisin(rand.nextInt(graphe.getCEById(idCE).nbVoisins()));
+int arrivee=gg.getCEById(idCE)
+.getVoisin(rand.nextInt(gg.getCEById(idCE).nbVoisins()));
 return arrivee;
 }
-static int positionAlea(Graphe graphe){
+static int positionAlea(GG gg){
 Random rand=new Random();
-int pos=graphe.getCE(rand.nextInt(graphe.sizeCE())).getId();
+int pos=gg.getCE(rand.nextInt(gg.sizeCE())).getId();
 return pos;
 }
-static Graphe splitC(C c){
-Graphe graphe=new Graphe();
+static GG splitC(C c){
+GG gg=new GG();
 C ameriqueDuNord=new C(0);
 C ameriqueDuSudAfrique=new C(1);
 C antarctique=new C(2);
@@ -148,12 +148,12 @@ japon.addCE(ce);
 europeAsieOceanie.addCE(ce);
 }
 }
-graphe.addC(ameriqueDuNord);
-graphe.addC(ameriqueDuSudAfrique);
-graphe.addC(antarctique);
-graphe.addC(europeAsieOceanie);
-graphe.addC(japon);
-return graphe;
+gg.addC(ameriqueDuNord);
+gg.addC(ameriqueDuSudAfrique);
+gg.addC(antarctique);
+gg.addC(europeAsieOceanie);
+gg.addC(japon);
+return gg;
 }
 static void remplirListIDC(){
 Integer[] j=new Integer[]{ 143, 149, 150 };
@@ -167,12 +167,12 @@ ameriqueDuN=Arrays.asList(an);
 ameriqueDuS=Arrays.asList(as);
 antarct=Arrays.asList(ant);
 }
-static void miseAJourC(Graphe graphe){
+static void miseAJourC(GG gg){
 ArrayList<Integer>supp=new ArrayList<Integer>();
 C c;
 int j;
-for(j=0;j<graphe.size();j++){
-c=graphe.getC(j);
+for(j=0;j<gg.size();j++){
+c=gg.getC(j);
 if(c.verifPoss()){
 supp.add(c.getId());
 }
@@ -180,11 +180,11 @@ supp.add(c.getId());
 int s;
 for(j=0;j<supp.size();j++){
 s=supp.get(j);
-graphe.removeCById(s);
+gg.removeCById(s);
 }
 }
-static void miseAJourGraphe(Graphe graphe){
-miseAJourC(graphe);
+static void miseAJourGG(GG gg){
+miseAJourC(gg);
 }
 static int takeRandom(ArrayList<Integer>liste){
 int taille=liste.size();
@@ -193,28 +193,28 @@ int hasard=rand.nextInt(taille);
 return liste.get(hasard);
 }
 static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer>cesNonConquises,
-Graphe graphe, int myId, boolean premierTour){
+GG gg, int myId, boolean premierTour){
 String sortie="";
 if(playerCount==2){
 if(premierTour){
-sortie=nouveauPlacement1v1PremierTour(nbMaxCree, cesNonConquises, graphe, myId);
+sortie=nouveauPlacement1v1PremierTour(nbMaxCree, cesNonConquises, gg, myId);
 } else{
 if(premierTour){
-sortie=nouveauPlacementMultiPremierTour(nbMaxCree, cesNonConquises, graphe, myId);
+sortie=nouveauPlacementMultiPremierTour(nbMaxCree, cesNonConquises, gg, myId);
 } else{
-sortie=nouveauPlacementMulti(nbMaxCree, cesNonConquises, graphe, myId);
+sortie=nouveauPlacementMulti(nbMaxCree, cesNonConquises, gg, myId);
 }
 }
 } else{
 if(premierTour){
-sortie=nouveauPlacementMultiPremierTour(nbMaxCree, cesNonConquises, graphe, myId);
+sortie=nouveauPlacementMultiPremierTour(nbMaxCree, cesNonConquises, gg, myId);
 } else{
-sortie=nouveauPlacementMulti(nbMaxCree, cesNonConquises, graphe, myId);
+sortie=nouveauPlacementMulti(nbMaxCree, cesNonConquises, gg, myId);
 }
 }
 return sortie;
 }
-static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer>cesNonConquises, Graphe graphe,
+static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer>cesNonConquises, GG gg,
 int myId){
 String sortie="";
 int compteur=0;
@@ -224,44 +224,44 @@ sortie=sortie+" 1 "+String.valueOf(cesNonConquises.get(compteur));
 nbMaxCree--;
 compteur++;
 } else{
-sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(gg, myId, true));
 nbMaxCree--;
 }
 }
 return sortie;
 }
 static String nouveauPlacementMultiPremierTour(int nbMaxCree, ArrayList<Integer>cesNonConquises,
-Graphe graphe, int myId){
+GG gg, int myId){
 String sortie="";
 for(int i=0;i<nbMaxCree;i++){
-sortie=sortie+" 1 "+String.valueOf(Tools.takeProcheGrandeMine(cesNonConquises, i, graphe));
+sortie=sortie+" 1 "+String.valueOf(Tools.takeProcheGrandeMine(cesNonConquises, i, gg));
 }
 return sortie;
 }
-static ArrayList<Integer>triCEsNonConquises(ArrayList<Integer>cesNonConquises, Graphe graphe){
+static ArrayList<Integer>triCEsNonConquises(ArrayList<Integer>cesNonConquises, GG gg){
 ArrayList<Integer>tableauTrie=new ArrayList<Integer>();
 int i;
 int j;
 for(i=0;i<7;i++){
 for(j=0;j<cesNonConquises.size();j++){
-if(graphe.getCEById(cesNonConquises.get(j)).getPlatinum()==(6 - i)){
+if(gg.getCEById(cesNonConquises.get(j)).getPlatinum()==(6 - i)){
 tableauTrie.add(cesNonConquises.get(j));
 }
 }
 }
 return tableauTrie;
 }
-static int positionAleaV2(Graphe graphe, int myId, Boolean bool){
-Graphe grapheLocal=new Graphe(graphe);
+static int positionAleaV2(GG gg, int myId, Boolean bool){
+GG ggLocal=new GG(gg);
 if(bool){
-for(C c:graphe.getCs()){
+for(C c:gg.getCs()){
 if(!c.estExploitable(myId)){
-grapheLocal.removeCById(c.getId());
+ggLocal.removeCById(c.getId());
 }
 }
 }
 ArrayList<Integer>mesCEs=new ArrayList<Integer>();
-for(C c:grapheLocal.getCs()){
+for(C c:ggLocal.getCs()){
 for(CE ce:c.getCEs()){
 if(ce.getControl()==myId){
 mesCEs.add(ce.getId());
@@ -273,9 +273,9 @@ ArrayList<Integer>mesCEsEnBordure=new ArrayList<Integer>();
 Boolean unVoisinEnnemi=false;
 for(int i=0;i<mesCEs.size();i++){
 unVoisinEnnemi=false;
-voisins=graphe.getCEById(mesCEs.get(i)).getVoisins();
+voisins=gg.getCEById(mesCEs.get(i)).getVoisins();
 for(int voisin:voisins){
-if(graphe.getCEById(voisin).getControl() !=myId){
+if(gg.getCEById(voisin).getControl() !=myId){
 unVoisinEnnemi=true;
 }
 }
@@ -286,22 +286,26 @@ mesCEsEnBordure.add(mesCEs.get(i));
 if(!mesCEsEnBordure.isEmpty()){
 mesCEs=mesCEsEnBordure;
 }
+ 
+if(!mesCEsEnBordure.isEmpty()){
+mesCEs=mesCEsEnBordure;
+}
 Random rand=new Random();
 int id=mesCEs.get(rand.nextInt(mesCEs.size()));
 return id;
 }
 static int takeProcheGrandeMine(ArrayList<Integer>cesNonConquises, int parcourtNonConquis,
-Graphe graphe){
-CE maCE=graphe.getCEById(cesNonConquises.get(parcourtNonConquis));
+GG gg){
+CE maCE=gg.getCEById(cesNonConquises.get(parcourtNonConquis));
 for(int voisin:maCE.getVoisins()){
-if(graphe.getCEById(voisin).getControl()==-1){
+if(gg.getCEById(voisin).getControl()==-1){
 return voisin;
 }
 }
 return maCE.getId();
 }
 static String nouveauPlacement1v1PremierTour(int nbMaxCree, ArrayList<Integer>cesNonConquises,
-Graphe graphe, int myId){
+GG gg, int myId){
 String sortie="";
 int compteur=0;
 for(int i=0;i<3;i++){
@@ -312,26 +316,26 @@ sortie=sortie+" 1 "+String.valueOf(cesNonConquises.get(i));
 }
 return sortie;
 }
-static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer>cesNonConquises, Graphe graphe,
+static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer>cesNonConquises, GG gg,
 int myId){
 String sortie="";
 int parcourtNonConquis=0;
 for(int i=0;i<nbMaxCree;i++){
 if(cesNonConquises.isEmpty()){
-sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(gg, myId, true));
 }
 if(parcourtNonConquis>=cesNonConquises.size()){
 parcourtNonConquis=0;
 }
 else{
 sortie=sortie+" 1 "
-+String.valueOf(Tools.takeProcheGrandeMine(cesNonConquises, parcourtNonConquis, graphe));
++String.valueOf(Tools.takeProcheGrandeMine(cesNonConquises, parcourtNonConquis, gg));
 parcourtNonConquis++;
 }
 }
 return sortie;
 }
-static ArrayList<Integer>CreeCEsNonConquisesParC(Graphe graphe){
+static ArrayList<Integer>CreeCEsNonConquisesParC(GG gg){
 ArrayList<Integer>cesNonConquises=new ArrayList<Integer>();
 ArrayList<Integer>idCsClasses=new ArrayList<Integer>();
 ArrayList<Integer>idCs=new ArrayList<Integer>();
@@ -346,9 +350,9 @@ int compteur=0;
 int compteurFinal=-1;
 while (!idCs.isEmpty()){
 for(int n:idCs){
-if(graphe.getCById(n).getDensitePlatinum()>=max){
+if(gg.getCById(n).getDensitePlatinum()>=max){
 idCMax=n;
-max=graphe.getCById(n).getDensitePlatinum();
+max=gg.getCById(n).getDensitePlatinum();
 compteurFinal=compteur;
 }
 compteur++;
@@ -362,24 +366,24 @@ compteur=0;
 compteurFinal=-1;
 }
 for(int idC:idCsClasses){
-for(CE uneCE:graphe.getCById(idC).getCEs()){
+for(CE uneCE:gg.getCById(idC).getCEs()){
 cesNonConquises.add(uneCE.getId());
 }
 }
 return cesNonConquises;
 }
 }
-class Graphe{
+class GG{
 private ArrayList<C>cs;
-Graphe(){
+GG(){
 cs=new ArrayList<C>();
 }
-Graphe(Graphe graphe){
+GG(GG gg){
 cs=new ArrayList<C>();
 C c;
 int j;
-for(j=0;j<graphe.size();j++){
-c=graphe.getC(j);
+for(j=0;j<gg.size();j++){
+c=gg.getC(j);
 cs.add(new C(c));
 }
 }
@@ -399,7 +403,7 @@ if(id==c.getId()){
 return c;
 }
 }
-System.err.println("c pas dans le graphe:"+id);
+System.err.println("c pas dans le gg:"+id);
 return cVide;
 }
 void setCs(ArrayList<C>cs){
@@ -470,7 +474,7 @@ return ce;
 }
 }
 }
-System.err.println("case pas dans le graphe:"+id);
+System.err.println("case pas dans le gg:"+id);
 return ceVide;
 }
 CE getCE(int num){
