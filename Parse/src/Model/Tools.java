@@ -129,7 +129,12 @@ public class Tools {
 			}
 
 		} else {
-			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+			if (premierTour) {
+				sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
+			} else {
+				sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+			}
+
 		}
 		return sortie;
 	}
@@ -158,32 +163,12 @@ public class Tools {
 		return sortie;
 	}
 
-	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
-			int myId) {
+	public static String nouveauPlacementMultiPremierTour(int nbMaxCree, ArrayList<Integer> cellulesNonConquises,
+			Graphe graphe, int myId) {
 		String sortie = "";
-		int parcourtNonConquis = 0;
+		// On place nos 10 robots autour des 10 plus grandes mines
 		for (int i = 0; i < nbMaxCree; i++) {
-
-			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
-			// d'elles hormis sur un continent inexploitable.
-
-			if (cellulesNonConquises.isEmpty()) {
-				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
-			}
-
-			// Pour chaque robot à placer on prend la plus grande mine non conquise et on se
-			// place sur une case voisine si possible sinon on se place directement dessus
-
-			else if (parcourtNonConquis < cellulesNonConquises.size()) {
-				sortie = sortie + " 1 "
-						+ String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, parcourtNonConquis, graphe));
-				parcourtNonConquis++;
-			}
-			// Si il y a plus de robots que de cases libres on met les derniers
-			// aléatoirement sur des cases libres
-			else {
-				sortie = sortie + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises));
-			}
+			sortie = sortie + " 1 " + String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, i, graphe));
 		}
 		return sortie;
 	}
@@ -249,6 +234,33 @@ public class Tools {
 		}
 		for (int i = 3; i < 7; i++) {
 			sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(i));
+		}
+		return sortie;
+	}
+
+	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
+		String sortie = "";
+		int parcourtNonConquis = 0;
+		for (int i = 0; i < nbMaxCree; i++) {
+
+			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
+			// des notres hormis sur un continent inexploitable.
+
+			if (cellulesNonConquises.isEmpty()) {
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+			}
+			// On se place sur les meilleurs mines non conquises, si on a plus de robots que
+			// de cellules non conquises les meilleures pourront en recevoir plusieurs
+			if (parcourtNonConquis >= cellulesNonConquises.size()) {
+				parcourtNonConquis = 0;
+			}
+
+			else {
+				sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(parcourtNonConquis));
+				parcourtNonConquis++;
+			}
+
 		}
 		return sortie;
 	}
