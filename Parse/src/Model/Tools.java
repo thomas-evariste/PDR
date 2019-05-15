@@ -140,7 +140,14 @@ public class Tools {
 			}
 
 		} else {
-			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+			if (premierTour) {
+				sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
+			} else {
+				sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+				// sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises,
+				// graphe, myId);
+			}
+
 		}
 		return sortie;
 	}
@@ -294,6 +301,78 @@ public class Tools {
 
 		}
 		return sortie;
+	}
+
+	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
+		String sortie = "";
+		int parcourtNonConquis = 0;
+		for (int i = 0; i < nbMaxCree; i++) {
+
+			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
+			// des notres hormis sur un continent inexploitable.
+
+			if (cellulesNonConquises.isEmpty()) {
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+			}
+			// On se place sur les meilleurs mines non conquises, si on a plus de robots que
+			// de cellules non conquises les meilleures pourront en recevoir plusieurs
+			if (parcourtNonConquis >= cellulesNonConquises.size()) {
+				parcourtNonConquis = 0;
+			}
+
+			else {
+				sortie = sortie + " 1 "
+						+ String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, parcourtNonConquis, graphe));
+				parcourtNonConquis++;
+			}
+
+		}
+		return sortie;
+	}
+
+	// Permet de créer la liste des cellules non conquises du meilleur continent au
+	// moins bon, cela nous permettra d'avoir les cellules classées par platinum
+	// puis par densité du continent
+	public static ArrayList<Integer> CreeCellulesNonConquisesParContinent(Graphe graphe) {
+		ArrayList<Integer> cellulesNonConquises = new ArrayList<Integer>();
+		ArrayList<Integer> idContinentsClasses = new ArrayList<Integer>();
+		ArrayList<Integer> idContinents = new ArrayList<Integer>();
+		idContinents.add(0);
+		idContinents.add(1);
+		idContinents.add(2);
+		idContinents.add(3);
+		idContinents.add(4);
+		double max = -1;
+		int idContinentMax = -1;
+		int compteur = 0;
+		int compteurFinal = -1;
+		while (!idContinents.isEmpty()) {
+			for (int n : idContinents) {
+				if (graphe.getContinentById(n).getDensitePlatinum() >= max) {
+					idContinentMax = n;
+					max = graphe.getContinentById(n).getDensitePlatinum();
+					compteurFinal = compteur;
+				}
+				compteur++;
+			}
+			idContinentsClasses.add(idContinentMax);
+			System.err.println("" + idContinentMax);
+			idContinents.remove(compteurFinal);
+			max = -1;
+			idContinentMax = -1;
+			compteur = 0;
+			compteurFinal = -1;
+
+		}
+
+		for (int idContinent : idContinentsClasses) {
+			for (Cellule uneCellule : graphe.getContinentById(idContinent).getCellules()) {
+				cellulesNonConquises.add(uneCellule.getId());
+			}
+		}
+
+		return cellulesNonConquises;
 	}
 
 }

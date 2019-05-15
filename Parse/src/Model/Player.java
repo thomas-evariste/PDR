@@ -27,7 +27,7 @@ public class Player {
 		// Création des cellules et ajout à la pangée
 		for (i = 0; i < zoneCount; i++) {
 			zoneId = in.nextInt(); // On récupère un ID de cellule
-			cellulesNonConquises.add(zoneId);
+			//cellulesNonConquises.add(zoneId);
 			platinumSource = in.nextInt(); // Et son nombre de platinum
 			Cellule cellule = new Cellule(zoneId, platinumSource);
 			pangee.addCellule(cellule);
@@ -48,7 +48,7 @@ public class Player {
 		for (i = 0; i < pangee.size(); i++) {
 			pangee.triVoisinDe(i);
 		}
-
+		
 		Graphe graphe = Tools.splitContinent(pangee);
 
 
@@ -56,7 +56,8 @@ public class Player {
 			continent.calculDensitePlatinum();
 			continent.triParPlatinum();
 		}
-
+		
+		cellulesNonConquises = Tools.CreeCellulesNonConquisesParContinent(graphe);
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
 		//////////////// PROCEDURE A CHAQUE TOUR
