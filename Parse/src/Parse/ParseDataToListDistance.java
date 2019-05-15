@@ -37,6 +37,7 @@ public class ParseDataToListDistance {
 
 			list.add(listDistance);
 		}
+		System.err.println(graphe.getCelluleById(20).getVoisins().size());
 
 		return list;
 	}
@@ -52,7 +53,9 @@ public class ParseDataToListDistance {
 					distance.getDistByDistance(dist).add(cont[j]);
 				}
 			}
+			distance.triBlocList();
 			listDistance.add(distance);
+			System.err.println("je vient de finir celui avec l'id :" +cont[i]);
 		}
 
 		return listDistance;
@@ -64,19 +67,26 @@ public class ParseDataToListDistance {
 	}
 
 	public static int parcour(int idCherche, int idPos, Continent continent, ArrayList<Integer> parcouru, int compt) {
-		if (compt > 21) {
+		parcouru.add(idPos);
+		if (compt > 13) {
 			return -1;
 		}
 		if (continent.getCelluleById(idPos).getVoisins().contains(idCherche)) {
 			return compt + 1;
 		}
 		int save = 21;
-		for (Cellule cellule : continent.getCellules()) {
+		for (int idcellule : continent.getCelluleById(idPos).getVoisins()) {
+			Cellule cellule = continent.getCelluleById(idcellule);
 			if (!parcouru.contains(cellule.getId())) {
-				parcouru.add(cellule.getId());
-				int res = parcour(idCherche, cellule.getId(), continent, parcouru, compt + 1);
-				if (save > res) {
-					save = res;
+				ArrayList<Integer> parcouru2 = new ArrayList<Integer>();
+				parcouru2.addAll(parcouru);
+				parcouru2.add(cellule.getId());
+				int res = parcour(idCherche, cellule.getId(), continent, parcouru2, compt + 1);
+
+				if ((res != -1)) {
+					if (save > res) {
+						save = res;
+					}
 				}
 			}
 		}
