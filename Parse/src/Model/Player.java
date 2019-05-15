@@ -65,6 +65,11 @@ public class Player {
 		cellulesNonConquises = Tools.CreeCellulesNonConquisesParContinent(graphe);
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
+		
+		ArrayList<ListD> list =CreerD.creer();
+		
+		
+		
 		//////////////// PROCEDURE A CHAQUE TOUR
 		//////////////// /////////////////////////////////////////
 

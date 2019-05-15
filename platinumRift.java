@@ -39,6 +39,7 @@ c.triParPlatinum();
 }
 cesNonConquises=Tools.CreeCEsNonConquisesParC(graphe);
 cesNonConquises=Tools.triCEsNonConquises(cesNonConquises, graphe);
+ArrayList<ListD>list=CreerD.creer();
 int zID;
 int myPlatinum;
 String deplacementStr;
@@ -266,6 +267,24 @@ if(ce.getControl()==myId){
 mesCEs.add(ce.getId());
 }
 }
+}
+ArrayList<Integer>voisins=new ArrayList<Integer>();
+ArrayList<Integer>mesCEsEnBordure=new ArrayList<Integer>();
+Boolean unVoisinEnnemi=false;
+for(int i=0;i<mesCEs.size();i++){
+unVoisinEnnemi=false;
+voisins=graphe.getCEById(mesCEs.get(i)).getVoisins();
+for(int voisin:voisins){
+if(graphe.getCEById(voisin).getControl() !=myId){
+unVoisinEnnemi=true;
+}
+}
+if(unVoisinEnnemi){
+mesCEsEnBordure.add(mesCEs.get(i));
+}
+}
+if(!mesCEsEnBordure.isEmpty()){
+mesCEs=mesCEsEnBordure;
 }
 Random rand=new Random();
 int id=mesCEs.get(rand.nextInt(mesCEs.size()));
