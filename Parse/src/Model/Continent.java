@@ -105,7 +105,7 @@ public class Continent {
 		return cellules.isEmpty();
 	}
 
-	public void triVoisinDe(int id) { 
+	public void triVoisinDe(int id) {
 		// Classe les voisins du plus chargé en platinum
 		// au moins chargé en platinum // Pas opti à
 		// changer en cas de limite de temps
@@ -114,7 +114,7 @@ public class Continent {
 		int i;
 		int j;
 		for (i = 0; i < 7; i++) {
-			for (j = voisin.size()-1; j >= 0; j--) {
+			for (j = voisin.size() - 1; j >= 0; j--) {
 				if (this.getCelluleById(voisin.get(j)).getPlatinum() == (6 - i)) {
 					voisinTrie.add(voisin.get(j));
 				}
@@ -183,24 +183,23 @@ public class Continent {
 		}
 		return compteur;
 	}
-	
-	public Boolean estExploitable(int myId){
+
+	public Boolean estExploitable(int myId) {
 		int compteur[] = new int[2];
-		for(int i=0;i<2;i++) {
-			compteur[i]=0;
+		for (int i = 0; i < 2; i++) {
+			compteur[i] = 0;
 		}
-		for(int j=0; j<cellules.size();j++) {
-			if(getCellule(j).getControl() !=-1) {
-				if(getCellule(j).getControl() == myId) {
+		for (int j = 0; j < cellules.size(); j++) {
+			if (getCellule(j).getControl() != -1) {
+				if (getCellule(j).getControl() == myId) {
 					compteur[0]++;
-				}
-				else {
+				} else {
 					compteur[1]++;
 				}
 			}
 		}
-		for(int k=0;k<2;k++) {
-			if(compteur[k]==cellules.size()) {
+		for (int k = 0; k < 2; k++) {
+			if (compteur[k] == cellules.size()) {
 				return false;
 			}
 		}

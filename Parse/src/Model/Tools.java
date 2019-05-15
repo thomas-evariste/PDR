@@ -17,18 +17,6 @@ public class Tools {
 		return arrivee;
 	}
 
-<<<<<<< HEAD
-=======
-	public static int positionAlea(Graphe graphe) {
-		// On récupère une cellule au hasard sur le graphe
-		Random rand = new Random();
-		int pos = graphe.getCellule(rand.nextInt(graphe.sizeCellule())).getId();
-		return pos;
-	}
-
-	// static int[] classementCellulesDepart(Graphe graphe){}
->>>>>>> origin/travail_thomas
-
 	public static Graphe splitContinent(Continent continent) {
 		// Initialisation des continents
 		Graphe graphe = new Graphe();
@@ -79,7 +67,7 @@ public class Tools {
 
 	}
 
-	public static void miseAJourContinent(Graphe graphe) {
+	public static void miseAJourGraphe(Graphe graphe) {
 		ArrayList<Integer> supp = new ArrayList<Integer>();
 		Continent continent;
 		int j;
@@ -94,17 +82,6 @@ public class Tools {
 			s = supp.get(j);
 			graphe.removeContinentById(s);
 		}
-	}
-
-	public static void miseAJourGraphe(Graphe graphe) {
-		miseAJourContinent(graphe);
-	}
-
-	public static int takeRandom(ArrayList<Integer> liste) {
-		int taille = liste.size();
-		Random rand = new Random();
-		int hasard = rand.nextInt(taille);
-		return liste.get(hasard);
 	}
 
 	public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises,
@@ -180,13 +157,8 @@ public class Tools {
 		return tableauTrie;
 	}
 
-<<<<<<< HEAD
-	public static int position(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
-																				// le graphe
-=======
-	public static int positionAleaV2(Graphe graphe, int myId, Boolean bool) {
+	public static int position(Graphe graphe, int myId, Boolean bool) { 
 		// On récupère une cellule au hasard sur le graphe
->>>>>>> origin/travail_thomas
 		Graphe grapheLocal = new Graphe(graphe);
 		if (bool) {
 			for (Continent continent : graphe.getContinents()) {
