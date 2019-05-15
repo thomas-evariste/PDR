@@ -133,6 +133,8 @@ public class Tools {
 				sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
 			} else {
 				sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+				// sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises,
+				// graphe, myId);
 			}
 
 		}
@@ -257,12 +259,57 @@ public class Tools {
 			}
 
 			else {
-				sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(parcourtNonConquis));
+				sortie = sortie + " 1 "
+						+ String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, parcourtNonConquis, graphe));
 				parcourtNonConquis++;
 			}
 
 		}
 		return sortie;
+	}
+
+	// Permet de créer la liste des cellules non conquises du meilleur continent au
+	// moins bon, cela nous permettra d'avoir les cellules classées par platinum
+	// puis par densité du continent
+	public static ArrayList<Integer> CreeCellulesNonConquisesParContinent(Graphe graphe) {
+		ArrayList<Integer> cellulesNonConquises = new ArrayList<Integer>();
+		ArrayList<Integer> idContinentsClasses = new ArrayList<Integer>();
+		ArrayList<Integer> idContinents = new ArrayList<Integer>();
+		idContinents.add(0);
+		idContinents.add(1);
+		idContinents.add(2);
+		idContinents.add(3);
+		idContinents.add(4);
+		double max = -1;
+		int idContinentMax = -1;
+		int compteur = 0;
+		int compteurFinal = -1;
+		while (!idContinents.isEmpty()) {
+			for (int n : idContinents) {
+				if (graphe.getContinentById(n).getDensitePlatinum() >= max) {
+					idContinentMax = n;
+					max = graphe.getContinentById(n).getDensitePlatinum();
+					compteurFinal = compteur;
+				}
+				compteur++;
+			}
+			idContinentsClasses.add(idContinentMax);
+			System.err.println("" + idContinentMax);
+			idContinents.remove(compteurFinal);
+			max = -1;
+			idContinentMax = -1;
+			compteur = 0;
+			compteurFinal = -1;
+
+		}
+
+		for (int idContinent : idContinentsClasses) {
+			for (Cellule uneCellule : graphe.getContinentById(idContinent).getCellules()) {
+				cellulesNonConquises.add(uneCellule.getId());
+			}
+		}
+
+		return cellulesNonConquises;
 	}
 
 }

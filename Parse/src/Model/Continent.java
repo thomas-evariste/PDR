@@ -113,7 +113,7 @@ public class Continent {
 		int i;
 		int j;
 		for (i = 0; i < 7; i++) {
-			for (j = 0; j < voisin.size(); j++) {
+			for (j = voisin.size()-1; j >= 0; j--) {
 				if (this.getCelluleById(voisin.get(j)).getPlatinum() == (6 - i)) {
 					voisinTrie.add(voisin.get(j));
 				}
@@ -200,7 +200,6 @@ public class Continent {
 		}
 		for(int k=0;k<2;k++) {
 			if(compteur[k]==cellules.size()) {
-				System.err.println("Je renvoie false" + id);
 				return false;
 			}
 		}
