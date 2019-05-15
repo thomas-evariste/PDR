@@ -14,7 +14,7 @@ public class ParseListDistanceToTexte {
 
 	public static void parse(ArrayList<ListDistance> list) {
 
-		String f = "C:/DATA/ISIC/PDR/PDR/listeDistance.txt";
+		String f = "C:/DATA/ISIC/PDR/PDR/listeDistanceEurasie.txt";
 
 		String ligne = "";
 

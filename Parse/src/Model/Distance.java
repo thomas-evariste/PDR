@@ -60,7 +60,7 @@ public class Distance {
 	
 	public void triBlocList(){
 		ArrayList<BlocDistance> newDists= new ArrayList<BlocDistance>();
-		for(int i=0;i<dists.size();i++){
+		for(int i=1;i<dists.size()+1;i++){
 			for(int j=0;j<dists.size();j++){
 				if(i==dists.get(j).getDistance()){
 					newDists.add(dists.get(j));

@@ -22,21 +22,22 @@ public class ParseDataToListDistance {
 		for (Continent continent : graphe.getContinents()) {
 			ListDistance listDistance = new ListDistance();
 			if (continent.size() == 3) {
-				listDistance = createListUnContinent(japon, continent);
+				//listDistance = createListUnContinent(japon, continent);
 			} else if (continent.size() == 33) {
 				//listDistance = createListUnContinent(ameriqueNord, continent);
 			} else if (continent.size() == 44) {
 				//listDistance = createListUnContinent(ameriqueSud, continent);
 			} else if (continent.size() == 7) {
-				listDistance = createListUnContinent(antartic, continent);
+				//listDistance = createListUnContinent(antartic, continent);
 			} else if (continent.size() == 67) {
-				//listDistance = createListUnContinent(eurasie, continent);
+				listDistance = createListUnContinent(eurasie, continent);
 			} else {
 				System.out.println("pb : size = " + continent.size());
 			}
 
 			list.add(listDistance);
 		}
+		System.err.println(graphe.getCelluleById(20).getVoisins().size());
 
 		return list;
 	}
@@ -44,18 +45,17 @@ public class ParseDataToListDistance {
 	public static ListDistance createListUnContinent(int[] cont, Continent continent) {
 		ListDistance listDistance = new ListDistance();
 
-
 		for (int i = 0; i < cont.length; i++) {
 			Distance distance = new Distance(cont[i]);
 			for (int j = 0; j < cont.length; j++) {
 				if (i != j) {
 					int dist = distance(cont[i], cont[j], continent);
-					System.err.println("les cellules sont : " +cont[i] +" : " +cont[j] +" et on une distance de "+ dist);
 					distance.getDistByDistance(dist).add(cont[j]);
 				}
 			}
 			distance.triBlocList();
 			listDistance.add(distance);
+			System.err.println("je vient de finir celui avec l'id :" +cont[i]);
 		}
 
 		return listDistance;
@@ -68,7 +68,7 @@ public class ParseDataToListDistance {
 
 	public static int parcour(int idCherche, int idPos, Continent continent, ArrayList<Integer> parcouru, int compt) {
 		parcouru.add(idPos);
-		if (compt > 28) {
+		if (compt > 13) {
 			return -1;
 		}
 		if (continent.getCelluleById(idPos).getVoisins().contains(idCherche)) {
@@ -78,10 +78,12 @@ public class ParseDataToListDistance {
 		for (int idcellule : continent.getCelluleById(idPos).getVoisins()) {
 			Cellule cellule = continent.getCelluleById(idcellule);
 			if (!parcouru.contains(cellule.getId())) {
-				parcouru.add(cellule.getId());
-				int res = parcour(idCherche, cellule.getId(), continent, parcouru, compt + 1);
+				ArrayList<Integer> parcouru2 = new ArrayList<Integer>();
+				parcouru2.addAll(parcouru);
+				parcouru2.add(cellule.getId());
+				int res = parcour(idCherche, cellule.getId(), continent, parcouru2, compt + 1);
+
 				if ((res != -1)) {
-					System.err.println("on est à "+ cellule.getId()+" avec un res de"+res);
 					if (save > res) {
 						save = res;
 					}
