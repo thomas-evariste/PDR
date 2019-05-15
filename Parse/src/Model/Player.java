@@ -51,13 +51,11 @@ public class Player {
 
 		Graphe graphe = Tools.splitContinent(pangee);
 
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		for (Continent continent : graphe.getContinents()) {
 			continent.calculDensitePlatinum();
 			continent.triParPlatinum();
 		}
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
@@ -74,6 +72,7 @@ public class Player {
 		int nbMaxCree;
 		String placement;
 		Continent continent;
+		boolean premierTour = true;
 		while (true) {
 
 			////// PHASE DE RECUPERATION DE DONNEES //////
@@ -96,6 +95,8 @@ public class Player {
 					graphe.getCelluleById(i).setRobots(in.nextInt(), j);
 				}
 			}
+			
+			
 
 			////////// PHASE DE DEPLACEMENT ////////////
 
@@ -154,13 +155,16 @@ public class Player {
 
 			nbMaxCree = myPlatinum / 20;
 			placement = "";
-			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe);
-
+			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe, myId, premierTour);
 			if (placement == "") {
 				placement = "WAIT";
 			}
 
 			System.out.println(placement);
+			
+			if(premierTour) {
+				premierTour = false;
+			}
 		}
 	}
 

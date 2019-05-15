@@ -50,13 +50,11 @@ class Player {
 
 		Graphe graphe = Tools.splitContinent(pangee);
 
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		for (Continent continent : graphe.getContinents()) {
 			continent.calculDensitePlatinum();
 			continent.triParPlatinum();
 		}
-		System.err.println("nb case : " + graphe.sizeCellule());
 
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
@@ -73,6 +71,7 @@ class Player {
 		int nbMaxCree;
 		String placement;
 		Continent continent;
+		boolean premierTour = true;
 		while (true) {
 
 			////// PHASE DE RECUPERATION DE DONNEES //////
@@ -95,6 +94,8 @@ class Player {
 					graphe.getCelluleById(i).setRobots(in.nextInt(), j);
 				}
 			}
+			
+			
 
 			////////// PHASE DE DEPLACEMENT ////////////
 
@@ -153,13 +154,16 @@ class Player {
 
 			nbMaxCree = myPlatinum / 20;
 			placement = "";
-			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe);
-
+			placement = Tools.nouveauPlacement(nbMaxCree, playerCount, cellulesNonConquises, graphe, myId, premierTour);
 			if (placement == "") {
 				placement = "WAIT";
 			}
 
 			System.out.println(placement);
+			
+			if(premierTour) {
+				premierTour = false;
+			}
 		}
 	}
 
@@ -168,187 +172,255 @@ class Player {
 
 class Tools {
 
-    static List<Integer> jap;
-    static List<Integer> ameriqueDuN;
-    static List<Integer> ameriqueDuS;
-    static List<Integer> antarct;
-    
-    
-    
-    public static int destination(int idCellule, Graphe graphe){ // Déplacement sur un voisin au hasard
-        Random rand = new Random();
-        int arrivee = graphe.getCelluleById(idCellule).getVoisin(rand.nextInt(graphe.getCelluleById(idCellule).nbVoisins()));
-        return arrivee;
-    }
-    
-    public static int positionAlea(Graphe graphe){  //On récupère une cellule au hasard sur le graphe
-        Random rand = new Random();
-        int pos = graphe.getCellule(rand.nextInt(graphe.sizeCellule())).getId();       
-        return pos;
-    }
-    
-    //static int[] classementCellulesDepart(Graphe graphe){}
-        
-    
-    
-    
-    public static Graphe splitContinent( Continent continent ) {  //Initialisation des continents
-        Graphe graphe = new Graphe();
-        Continent ameriqueDuNord = new Continent(0);
-        Continent ameriqueDuSudAfrique = new Continent(1);
-        Continent antarctique = new Continent(2);
-        Continent europeAsieOceanie = new Continent(3);
-        Continent japon = new Continent(4);
-        Cellule cellule;
+	static List<Integer> jap;
+	static List<Integer> ameriqueDuN;
+	static List<Integer> ameriqueDuS;
+	static List<Integer> antarct;
+
+	public static int destination(int idCellule, Graphe graphe) { // Déplacement sur un voisin au hasard
+		Random rand = new Random();
+		int arrivee = graphe.getCelluleById(idCellule)
+				.getVoisin(rand.nextInt(graphe.getCelluleById(idCellule).nbVoisins()));
+		return arrivee;
+	}
+
+	public static int positionAlea(Graphe graphe) { // On récupère une cellule au hasard sur le graphe
+		Random rand = new Random();
+		int pos = graphe.getCellule(rand.nextInt(graphe.sizeCellule())).getId();
+		return pos;
+	}
+
+	// static int[] classementCellulesDepart(Graphe graphe){}
+
+	public static Graphe splitContinent(Continent continent) { // Initialisation des continents
+		Graphe graphe = new Graphe();
+		Continent ameriqueDuNord = new Continent(0);
+		Continent ameriqueDuSudAfrique = new Continent(1);
+		Continent antarctique = new Continent(2);
+		Continent europeAsieOceanie = new Continent(3);
+		Continent japon = new Continent(4);
+		Cellule cellule;
 		int i;
-        for (i=0;i<continent.size();i++){
-			cellule=continent.getCellule(i);
-            int id = cellule.getId();
-            
-            if (ameriqueDuS.contains(id)){
-                ameriqueDuSudAfrique.addCellule(cellule);
-            }
-            else if(ameriqueDuN.contains(id)){
-                ameriqueDuNord.addCellule(cellule);
-            }
-            else if(antarct.contains(id)){
-                antarctique.addCellule(cellule);
-            }
-            else if(jap.contains(id)){
-                japon.addCellule(cellule);
-            }
-            else{
-                europeAsieOceanie.addCellule(cellule);
-            }
-        }
-        graphe.addContinent(ameriqueDuNord);
-        graphe.addContinent(ameriqueDuSudAfrique);
-        graphe.addContinent(antarctique);
-        graphe.addContinent(europeAsieOceanie);
-        graphe.addContinent(japon);
-        
-        return graphe;
-    }
-    
-    public static void remplirListIDContinent(){ //Suite de l'initialisation des continents
-        Integer[] j = new Integer[] { 143,149, 150 }; 
-        Integer[] an = new Integer[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,27,28,29,37,38,43,46,47,48,49 }; 
-        Integer[] as = new Integer[] { 18,24,25,26,30,31,32,33,34,35,36,39,40,41,42,44,45,50,51,54,55,56,60,61,62,63,64,65,66,71,72,73,74,75,76,77,83,84,85,86,87,88,95,96 }; 
-        Integer[] ant = new Integer[] { 57,67,78,89,97,104,113 }; 
-        jap = Arrays.asList(j);
-        ameriqueDuN = Arrays.asList(an);
-        ameriqueDuS = Arrays.asList(as);
-        antarct = Arrays.asList(ant);
-        
-    }
-        
- /*   static void miseAJourNonConquis(ArrayList<int> cellulesNonConquises, Graphe graphe){ 
-        ArrayList<Integer> supp = new ArrayList<Integer>();
-        for(Continent continent : grapheNonConquis.getContinents()){
-            for(Cellule cellule : continent.getCellules()){
-                if((graphe.getCellule(cellule.getId()).getControl())!=-1){
-                    supp.add(cellule.getId());
-                }
-            }
-        }
-        for(int id : supp){
-            grapheNonConquis.removeCelluleById(id);
-        }
-    }*/
-    
-/*    static void miseAJourPossessions(ArrayList<int[]> listInfosTempsReel,Graphe graphe){           //Plus adapté à la nouvelle modélisation
-        for(int i = 0; i < graphe.sizeCellule();i++ ){
-            graphe.getCellule(i).setControl(listInfosTempsReel.get(graphe.getCellule(i).getId())[1]);
-        }
-    }*/
-    
-    public static void miseAJourContinent(Graphe graphe){
-        ArrayList<Integer> supp = new ArrayList<Integer>();
+		for (i = 0; i < continent.size(); i++) {
+			cellule = continent.getCellule(i);
+			int id = cellule.getId();
+
+			if (ameriqueDuS.contains(id)) {
+				ameriqueDuSudAfrique.addCellule(cellule);
+			} else if (ameriqueDuN.contains(id)) {
+				ameriqueDuNord.addCellule(cellule);
+			} else if (antarct.contains(id)) {
+				antarctique.addCellule(cellule);
+			} else if (jap.contains(id)) {
+				japon.addCellule(cellule);
+			} else {
+				europeAsieOceanie.addCellule(cellule);
+			}
+		}
+		graphe.addContinent(ameriqueDuNord);
+		graphe.addContinent(ameriqueDuSudAfrique);
+		graphe.addContinent(antarctique);
+		graphe.addContinent(europeAsieOceanie);
+		graphe.addContinent(japon);
+
+		return graphe;
+	}
+
+	public static void remplirListIDContinent() { // Suite de l'initialisation des continents
+		Integer[] j = new Integer[] { 143, 149, 150 };
+		Integer[] an = new Integer[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23,
+				27, 28, 29, 37, 38, 43, 46, 47, 48, 49 };
+		Integer[] as = new Integer[] { 18, 24, 25, 26, 30, 31, 32, 33, 34, 35, 36, 39, 40, 41, 42, 44, 45, 50, 51, 54,
+				55, 56, 60, 61, 62, 63, 64, 65, 66, 71, 72, 73, 74, 75, 76, 77, 83, 84, 85, 86, 87, 88, 95, 96 };
+		Integer[] ant = new Integer[] { 57, 67, 78, 89, 97, 104, 113 };
+		jap = Arrays.asList(j);
+		ameriqueDuN = Arrays.asList(an);
+		ameriqueDuS = Arrays.asList(as);
+		antarct = Arrays.asList(ant);
+
+	}
+
+	/*
+	 * static void miseAJourNonConquis(ArrayList<int> cellulesNonConquises, Graphe
+	 * graphe){ ArrayList<Integer> supp = new ArrayList<Integer>(); for(Continent
+	 * continent : grapheNonConquis.getContinents()){ for(Cellule cellule :
+	 * continent.getCellules()){
+	 * if((graphe.getCellule(cellule.getId()).getControl())!=-1){
+	 * supp.add(cellule.getId()); } } } for(int id : supp){
+	 * grapheNonConquis.removeCelluleById(id); } }
+	 */
+
+	/*
+	 * static void miseAJourPossessions(ArrayList<int[]> listInfosTempsReel,Graphe
+	 * graphe){ //Plus adapté à la nouvelle modélisation for(int i = 0; i <
+	 * graphe.sizeCellule();i++ ){
+	 * graphe.getCellule(i).setControl(listInfosTempsReel.get(graphe.getCellule(i).
+	 * getId())[1]); } }
+	 */
+
+	public static void miseAJourContinent(Graphe graphe) {
+		ArrayList<Integer> supp = new ArrayList<Integer>();
 		Continent continent;
 		int j;
-        for(j=0;j<graphe.size();j++){
-			continent=graphe.getContinent(j);
-            if(continent.verifPoss()){
-                supp.add(continent.getId());
-            }
-        }
+		for (j = 0; j < graphe.size(); j++) {
+			continent = graphe.getContinent(j);
+			if (continent.verifPoss()) {
+				supp.add(continent.getId());
+			}
+		}
 		int s;
-		for(j=0;j<supp.size();j++){
-			s=supp.get(j);
-            graphe.removeContinentById(s);
-        }
-    }
-    
-    public static void miseAJourGraphe(Graphe graphe){
-        miseAJourContinent(graphe);
-    }
-    
-    public static int takeRandom(ArrayList<Integer> liste){
-        int taille = liste.size();
-        Random rand = new Random();
-        int hasard = rand.nextInt(taille);
-        return liste.get(hasard);
-    }
-    
-    public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
-    	String sortie = "";
-    	if (playerCount == 2) {
-    		sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe);
-    	}
-    	else {
-    		sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe);
-    	}
-    	return sortie;
-    }
-    
-    public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe){
-    	String sortie = "";
-    	int compteur=0;
-    	while(nbMaxCree != 0) {
-    		if((!cellulesNonConquises.isEmpty()) && cellulesNonConquises.size()>compteur) {
-    			sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(compteur));
-    			nbMaxCree--;
-    			compteur++;
-    		}
-    		else {
-    			sortie = sortie + " 1 " + String.valueOf(Tools.positionAlea(graphe));
-    			nbMaxCree--;
-    		}
-    	}
-    	return sortie;
-    }
-    
-    public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
-    	String sortie = "";
-    	for(int i=0;i<nbMaxCree;i++){
-    		// Si toutes les cellules sont possédées on se place aléatoirement sur l'une d'elles
-    		if(cellulesNonConquises.isEmpty()){
-    			sortie = sortie + " 1 " + String.valueOf(Tools.positionAlea(graphe));
-    		} 
-    		// Si il reste des cellules non possédées on se place aléatoirement sur l'une d'elles
-    		else {
-    			sortie = sortie + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises)) ;
-    		}
-    	}
-    	return sortie;
-    }
-    
-    public static ArrayList<Integer> triCellulesNonConquises(ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
-    	ArrayList<Integer> tableauTrie = new ArrayList<Integer>();
-    	int i;
+		for (j = 0; j < supp.size(); j++) {
+			s = supp.get(j);
+			graphe.removeContinentById(s);
+		}
+	}
+
+	public static void miseAJourGraphe(Graphe graphe) {
+		miseAJourContinent(graphe);
+	}
+
+	public static int takeRandom(ArrayList<Integer> liste) {
+		int taille = liste.size();
+		Random rand = new Random();
+		int hasard = rand.nextInt(taille);
+		return liste.get(hasard);
+	}
+
+	public static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer> cellulesNonConquises,
+			Graphe graphe, int myId, boolean premierTour) {
+		String sortie = "";
+		if (playerCount == 2) {
+			if (premierTour) {
+				sortie = nouveauPlacement1v1PremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
+			} else {
+				sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe, myId);
+			}
+
+		} else {
+			sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+		}
+		return sortie;
+	}
+
+	public static String nouveauPlacement1v1(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
+		String sortie = "";
+		int compteur = 0;
+		while (nbMaxCree != 0) {
+			if ((!cellulesNonConquises.isEmpty()) && cellulesNonConquises.size() > compteur) { // Tant qu'il reste des
+																								// cellules non
+																								// conquises on se place
+																								// dessus, on vise en
+																								// prorité celles qui
+																								// ont le plus de
+																								// platinum (liste
+																								// triée)
+				sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(compteur));
+				nbMaxCree--;
+				compteur++;
+			} else {
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+				nbMaxCree--;
+			}
+		}
+		return sortie;
+	}
+
+	public static String nouveauPlacementMulti(int nbMaxCree, ArrayList<Integer> cellulesNonConquises, Graphe graphe,
+			int myId) {
+		String sortie = "";
+		int parcourtNonConquis = 0;
+		for (int i = 0; i < nbMaxCree; i++) {
+
+			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
+			// d'elles hormis sur un continent inexploitable.
+
+			if (cellulesNonConquises.isEmpty()) {
+				sortie = sortie + " 1 " + String.valueOf(Tools.positionAleaV2(graphe, myId, true));
+			}
+
+			// Pour chaque robot à placer on prend la plus grande mine non conquise et on se
+			// place sur une case voisine si possible sinon on se place directement dessus
+
+			else if (parcourtNonConquis < cellulesNonConquises.size()) {
+				sortie = sortie + " 1 "
+						+ String.valueOf(Tools.takeProcheGrandeMine(cellulesNonConquises, parcourtNonConquis, graphe));
+				parcourtNonConquis++;
+			}
+			// Si il y a plus de robots que de cases libres on met les derniers
+			// aléatoirement sur des cases libres
+			else {
+				sortie = sortie + " 1 " + String.valueOf(Tools.takeRandom(cellulesNonConquises));
+			}
+		}
+		return sortie;
+	}
+
+	public static ArrayList<Integer> triCellulesNonConquises(ArrayList<Integer> cellulesNonConquises, Graphe graphe) {
+		ArrayList<Integer> tableauTrie = new ArrayList<Integer>();
+		int i;
 		int j;
-		for(i=0; i<7; i++) {
-			for(j=0; j<cellulesNonConquises.size();j++){
+		for (i = 0; i < 7; i++) {
+			for (j = 0; j < cellulesNonConquises.size(); j++) {
 				if (graphe.getCelluleById(cellulesNonConquises.get(j)).getPlatinum() == (6 - i)) {
 					tableauTrie.add(cellulesNonConquises.get(j));
 				}
 			}
 		}
-    	return tableauTrie;
-    }
-    	
-    
-    
+		return tableauTrie;
+	}
+
+	public static int positionAleaV2(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
+																				// le graphe
+		Graphe grapheLocal = new Graphe(graphe);
+		if (bool) {
+			for (Continent continent : graphe.getContinents()) {
+				if (!continent.estExploitable(myId)) {
+					grapheLocal.removeContinentById(continent.getId());
+				}
+			}
+		}
+		ArrayList<Integer> mesCellules = new ArrayList<Integer>();
+		for (Continent continent : grapheLocal.getContinents()) {
+			for (Cellule cellule : continent.getCellules()) {
+				if (cellule.getControl() == myId) {
+					mesCellules.add(cellule.getId());
+				}
+			}
+		}
+
+		Random rand = new Random();
+		int id = mesCellules.get(rand.nextInt(mesCellules.size()));
+		return id;
+	}
+
+	// Pour n ième plus grande mine non conquise (n = parcourtNonConquis) on trouve
+	// un voisin libre et on s'y implante si ce n'est pas possible on se place sur
+	// la mine directement
+	public static int takeProcheGrandeMine(ArrayList<Integer> cellulesNonConquises, int parcourtNonConquis,
+			Graphe graphe) {
+		Cellule maCellule = graphe.getCelluleById(cellulesNonConquises.get(parcourtNonConquis));
+		for (int voisin : maCellule.getVoisins()) {
+			if (graphe.getCelluleById(voisin).getControl() == -1) {
+				return voisin;
+			}
+		}
+		return maCellule.getId();
+	}
+
+	public static String nouveauPlacement1v1PremierTour(int nbMaxCree, ArrayList<Integer> cellulesNonConquises,
+			Graphe graphe, int myId) {
+		String sortie = "";
+		int compteur = 0;
+		for (int i = 0; i < 3; i++) {
+			sortie = sortie + " 2 " + String.valueOf(cellulesNonConquises.get(i));
+		}
+		for (int i = 3; i < 7; i++) {
+			sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(i));
+		}
+		return sortie;
+	}
+
 }
 
 
@@ -491,6 +563,7 @@ class Graphe {
             }
         }
         System.err.println("pas assez de cellules: " + num);
+        System.err.println(""+ comptNum);
         return celluleVide;
     }
     
@@ -572,7 +645,6 @@ class Continent {
 				return cellule;
 			}
 		}
-		System.err.println("cellule pas dans le graphe: " + id);
 		return celluleVide;
 	}
 
@@ -620,8 +692,8 @@ class Continent {
 	}
 
 	public void triVoisinDe(int id) { // Classe les voisins du plus chargé en platinum
-								// au moins chargé en platinum // Pas opti à
-								// changer en cas de limite de temps
+		// au moins chargé en platinum // Pas opti à
+		// changer en cas de limite de temps
 		ArrayList<Integer> voisin = this.getCelluleById(id).getVoisins();
 		ArrayList<Integer> voisinTrie = new ArrayList<Integer>();
 		int i;
@@ -670,13 +742,13 @@ class Continent {
 		this.densitePlatinum = densitePlatinum;
 
 	}
-	
+
 	public void triParPlatinum() {
 		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
 		int i;
 		int j;
 		Cellule cellule;
-		for(i=0; i<7; i++) {
+		for (i = 0; i < 7; i++) {
 			for (j = 0; j < cellules.size(); j++) {
 				cellule = cellules.get(j);
 				if (cellule.getPlatinum() == (6 - i)) {
@@ -686,235 +758,154 @@ class Continent {
 		}
 		cellules = cellulesTriees;
 	}
+
+	public int nombreDeCellulesControlees() {
+		int compteur = 0;
+		for (int i = 0; i < cellules.size(); i++) {
+			if (getCelluleById(i).getControl() != -1) {
+				compteur++;
+			}
+		}
+		return compteur;
+	}
+	
+	public Boolean estExploitable(int myId){
+		int compteur[] = new int[2];
+		for(int i=0;i<2;i++) {
+			compteur[i]=0;
+		}
+		for(int j=0; j<cellules.size();j++) {
+			if(getCellule(j).getControl() !=-1) {
+				if(getCellule(j).getControl() == myId) {
+					compteur[0]++;
+				}
+				else {
+					compteur[1]++;
+				}
+			}
+		}
+		for(int k=0;k<2;k++) {
+			if(compteur[k]==cellules.size()) {
+				System.err.println("Je renvoie false" + id);
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 
 class Cellule {
 
-    private int id;
-    private int controlePar;
-    private int[] robots;
-    private int platinum;
-    private ArrayList<Integer> voisins;
+	private int id;
+	private int controlePar;
+	private int[] robots;
+	private int platinum;
+	private ArrayList<Integer> voisins;
 
-
-    public Cellule(int id, int platinum, ArrayList<Integer> voisins){
-        this.id = id;
-        this.platinum = platinum;
-        this.voisins = voisins;
-        controlePar=-1;
-        robots = new int[4];
+	public Cellule(int id, int platinum, ArrayList<Integer> voisins) {
+		this.id = id;
+		this.platinum = platinum;
+		this.voisins = voisins;
+		controlePar = -1;
+		robots = new int[4];
 		int i;
-        for(i=0;i<4;i++){
-            robots[i]=0;
-        }
-    }
-    
-    public Cellule(int id, int platinum){
-        this.id = id;
-        this.platinum = platinum;
-        voisins = new ArrayList<Integer>();
-        controlePar=-1;
-        robots = new int[4];
+		for (i = 0; i < 4; i++) {
+			robots[i] = 0;
+		}
+	}
+
+	public Cellule(int id, int platinum) {
+		this.id = id;
+		this.platinum = platinum;
+		voisins = new ArrayList<Integer>();
+		controlePar = -1;
+		robots = new int[4];
 		int i;
-        for(i=0;i<4;i++){
-            robots[i]=0;
-        }
-        
-    }
-    
-    public Cellule(){
-        id = -1;
-        platinum = -1;
-        voisins = new ArrayList<Integer>();
-        controlePar=-1;
-        robots = new int[4];
+		for (i = 0; i < 4; i++) {
+			robots[i] = 0;
+		}
+
+	}
+
+	public Cellule() {
+		id = -1;
+		platinum = -1;
+		voisins = new ArrayList<Integer>();
+		controlePar = -1;
+		robots = new int[4];
 		int i;
-        for(i=0;i<4;i++){
-            robots[i]=0;
-        }
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public int getControl(){
-        return controlePar;
-    }
-
-    public int getPlatinum(){
-        return platinum;
-    }
-
-    public ArrayList<Integer> getVoisins(){
-        return voisins;
-    }
-
-    public int getVoisin(int num){
-        return voisins.get(num);
-    }
-    
-    public int getRobots(int i){
-        return robots[i];
-    }
-    
-    public Boolean verifVoisin(int id){
-        return voisins.contains(id);
-    }
-    
-    public void setId(int id){
-        this.id = id;    
-    }
-
-    public void setControl(int numJ){
-        controlePar = numJ;
-    }
-    
-    public void setPlatinum(int platinum){
-        this.platinum = platinum;    
-    }
-    
-    public void setVoisins(ArrayList<Integer> voisins){
-        this.voisins = voisins;    
-    }
-    
-    public void setRobots(int nombre, int i){
-        this.robots[i]= nombre;
-    }
-    
-    public void addVoisin(int idVoisin){
-        voisins.add(idVoisin);    
-    }
-    
-    public void addVoisinA(int idVoisin, int pos){
-        voisins.add(pos,idVoisin);    
-    }
-    
-    public void suppVoisin(int pos){
-        voisins.remove(pos);    
-    }
-    
-    public void videVoisin(){
-        voisins.clear();    
-    }
-    
-    public int nbVoisins(){
-        return voisins.size();
-    }
- 
-}
-
-
-class ListDistance {
-	private ArrayList<Distance> distances;
-    
-	public ListDistance(){
-		distances = new ArrayList<Distance>();
-    }
-	
-	public void add(Distance distance){
-		distances.add(distance);
-	}
-	
-	public ArrayList<Distance> getDistances(){
-		return distances;
-	}
-	
-	public Distance getDistance(int num){
-		return distances.get(num);
-	}
-}
-
-class Distance {
-
-	private int id1;
-	private int id2; // on prend id1 < id2 comme convention
-	private int dist;
-	
-	public Distance(){
-		id1=-1;
-		id2=-1;
-		dist=-1;
-	}
-	
-	public Distance(int id1, int id2){
-		this.id1=min(id1,id2);
-		this.id2=max(id1,id2);
-		dist=-1;
-	}
-	
-	public Distance(int id1, int id2, int dist){
-		this.id1=min(id1,id2);
-		this.id2=max(id1,id2);
-		this.dist=dist;
-	}
-
-	public void setId1(int id){
-		if(id2!=-1){
-			if(id>id2){
-				id1=id2;
-				id2=id;
-			}
-			else{
-				id1=id;
-			}
-		}
-		else{
-			id1=id;
+		for (i = 0; i < 4; i++) {
+			robots[i] = 0;
 		}
 	}
 
-	public void setId2(int id){
-		if(id1!=-1){
-			if(id<id1){
-				id2=id1;
-				id1=id;
-			}
-			else{
-				id1=id;
-			}
-		}
-		else{
-			id1=id;
-		}
+	public int getId() {
+		return id;
 	}
-	
-	public void setIds(int id1, int id2){
-		this.id1=min(id1,id2);
-		this.id2=max(id1,id2);
+
+	public int getControl() {
+		return controlePar;
 	}
-	
-	public void setDist(int dist){
-		this.dist=dist;
+
+	public int getPlatinum() {
+		return platinum;
 	}
-	
-	public int getDist(){
-		return dist;
+
+	public ArrayList<Integer> getVoisins() {
+		return voisins;
 	}
-	
-	public int getId1(){
-		return id1;
+
+	public int getVoisin(int num) {
+		return voisins.get(num);
 	}
-	
-	public int getId2(){
-		return id2;
+
+	public int getRobots(int i) {
+		return robots[i];
 	}
-	
-	
-	
-	
-	
-	public int min(int a,int b){
-		if(a<b)
-			return a;
-		return b;
+
+	public Boolean verifVoisin(int id) {
+		return voisins.contains(id);
 	}
-	
-	public int max(int a,int b){
-		if(a>b)
-			return a;
-		return b;
+
+	public void setId(int id) {
+		this.id = id;
 	}
-	
+
+	public void setControl(int numJ) {
+		controlePar = numJ;
+	}
+
+	public void setPlatinum(int platinum) {
+		this.platinum = platinum;
+	}
+
+	public void setVoisins(ArrayList<Integer> voisins) {
+		this.voisins = voisins;
+	}
+
+	public void setRobots(int nombre, int i) {
+		this.robots[i] = nombre;
+	}
+
+	public void addVoisin(int idVoisin) {
+		voisins.add(idVoisin);
+	}
+
+	public void addVoisinA(int idVoisin, int pos) {
+		voisins.add(pos, idVoisin);
+	}
+
+	public void suppVoisin(int pos) {
+		voisins.remove(pos);
+	}
+
+	public void videVoisin() {
+		voisins.clear();
+	}
+
+	public int nbVoisins() {
+		return voisins.size();
+	}
+
 }

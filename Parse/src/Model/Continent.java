@@ -59,7 +59,6 @@ public class Continent {
 				return cellule;
 			}
 		}
-		System.err.println("cellule pas dans le graphe: " + id);
 		return celluleVide;
 	}
 
@@ -107,8 +106,8 @@ public class Continent {
 	}
 
 	public void triVoisinDe(int id) { // Classe les voisins du plus chargé en platinum
-								// au moins chargé en platinum // Pas opti à
-								// changer en cas de limite de temps
+		// au moins chargé en platinum // Pas opti à
+		// changer en cas de limite de temps
 		ArrayList<Integer> voisin = this.getCelluleById(id).getVoisins();
 		ArrayList<Integer> voisinTrie = new ArrayList<Integer>();
 		int i;
@@ -157,13 +156,13 @@ public class Continent {
 		this.densitePlatinum = densitePlatinum;
 
 	}
-	
+
 	public void triParPlatinum() {
 		ArrayList<Cellule> cellulesTriees = new ArrayList<Cellule>();
 		int i;
 		int j;
 		Cellule cellule;
-		for(i=0; i<7; i++) {
+		for (i = 0; i < 7; i++) {
 			for (j = 0; j < cellules.size(); j++) {
 				cellule = cellules.get(j);
 				if (cellule.getPlatinum() == (6 - i)) {
@@ -172,5 +171,39 @@ public class Continent {
 			}
 		}
 		cellules = cellulesTriees;
+	}
+
+	public int nombreDeCellulesControlees() {
+		int compteur = 0;
+		for (int i = 0; i < cellules.size(); i++) {
+			if (getCelluleById(i).getControl() != -1) {
+				compteur++;
+			}
+		}
+		return compteur;
+	}
+	
+	public Boolean estExploitable(int myId){
+		int compteur[] = new int[2];
+		for(int i=0;i<2;i++) {
+			compteur[i]=0;
+		}
+		for(int j=0; j<cellules.size();j++) {
+			if(getCellule(j).getControl() !=-1) {
+				if(getCellule(j).getControl() == myId) {
+					compteur[0]++;
+				}
+				else {
+					compteur[1]++;
+				}
+			}
+		}
+		for(int k=0;k<2;k++) {
+			if(compteur[k]==cellules.size()) {
+				System.err.println("Je renvoie false" + id);
+				return false;
+			}
+		}
+		return true;
 	}
 }
