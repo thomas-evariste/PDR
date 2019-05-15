@@ -49,8 +49,7 @@ public class Distance {
 				return dist;
 			}
 		}
-		BlocDistance dist = new BlocDistance();
-		dist.setDistance(distance);
+		BlocDistance dist = new BlocDistance(distance);
 		dists.add(dist);
 		return dist;
 	}
@@ -59,6 +58,22 @@ public class Distance {
 		return id;
 	}
 	
+	public void triBlocList(){
+		ArrayList<BlocDistance> newDists= new ArrayList<BlocDistance>();
+		for(int i=1;i<dists.size()+1;i++){
+			for(int j=0;j<dists.size();j++){
+				if(i==dists.get(j).getDistance()){
+					newDists.add(dists.get(j));
+					break;
+				}
+			}
+		}
+		dists = newDists;
+	}
+	
+	public int size(){
+		return dists.size();
+	}
 	
 	
 	

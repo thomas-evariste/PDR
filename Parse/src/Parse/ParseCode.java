@@ -23,6 +23,8 @@ public class ParseCode {
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Cellule.java", printwriter);
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/ListDistance.java", printwriter);
 			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/Distance.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/Parse/src/Model/BlocDistance.java", printwriter);
+			write("C:/DATA/ISIC/PDR/PDR/listeDistanceFinal.txt", printwriter);
 
 			printwriter.close(); 
 
