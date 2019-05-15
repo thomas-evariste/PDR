@@ -105,7 +105,8 @@ public class Continent {
 		return cellules.isEmpty();
 	}
 
-	public void triVoisinDe(int id) { // Classe les voisins du plus chargé en platinum
+	public void triVoisinDe(int id) { 
+		// Classe les voisins du plus chargé en platinum
 		// au moins chargé en platinum // Pas opti à
 		// changer en cas de limite de temps
 		ArrayList<Integer> voisin = this.getCelluleById(id).getVoisins();

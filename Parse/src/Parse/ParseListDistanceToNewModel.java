@@ -45,65 +45,69 @@ public class ParseListDistanceToNewModel {
 			int i;
 			int j;
 			int compt = 0;
+			int comptttt=0;
+			int compttttttttttt=0;
+			int compttttttttttttttttt=0;
 			while ((ligne = buff.readLine()) != null) {
 				i = ligne.indexOf("(") + 1;
 				j = ligne.indexOf(")");
 
 				if (ligne.equals("class CreerD {") || ligne.equals("ArrayList<ListD> list = new ArrayList<ListD>();")
-						|| ligne.equals("public static ArrayList<ListD> creer() {")) {
+						|| ligne.equals("public static ArrayList<ListD> creer() {")
+						|| ligne.equals("}")|| ligne.equals("}")|| ligne.equals("return list;")) {
 					printwriter.println(ligne);
 					compt++;
 				} else if (ligne.equals("ListD listD = new ListD();")) {
-					ligneAddListD = ligneAddListD + "ListD listD=new ListD(di); ";
-					ligneAddListD_D = ligneAddListD_D + "D[] di={";
+					compttttttttttttttttt++;
+					ligneAddListD = ligneAddListD + "ListD listD"+compttttttttttttttttt+"=new ListD(di"+compttttttttttt+"); ";
+					ligneAddListD_D = ligneAddListD_D + "D[] di"+compttttttttttt+"={";
+					compttttttttttt++;
 				} else if (ligne.indexOf("D d = new D") != -1) {
-					ligneAddD = ligneAddD + "D d" + comptListD + "=new D(" + ligne.substring(i, j) + ",b);";
-					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "b={";
+					ligneAddD = ligneAddD + "D d" + comptListD + "=new D(" + ligne.substring(i, j) + ",b"+comptttt+");";
+					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "int[][] b"+comptttt+"={";
+					comptttt++;
 				} else if (ligne.indexOf("BD bD = new BD") != -1) {
 					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "{";
 				} else if (ligne.indexOf("bD = bD.add") != -1) {
 					comptBD++;
 					if (comptBD != 1) {
-						ligneAddD_BlocDistance = ligneAddD_BlocDistance + "+";
+						ligneAddD_BlocDistance = ligneAddD_BlocDistance + ",";
 					}
 					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "" + ligne.substring(i, j);
 				} else if (ligne.indexOf("d = d.add") != -1) {
 					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "}";
 					comptBD = 0;
 
-					ligneAddD_BlocDistance = ligneAddD_BlocDistance + "+";
+					ligneAddD_BlocDistance = ligneAddD_BlocDistance + ",";
 					// ligneAddD_BlocDistance = ligneAddD_BlocDistance + "b" +
 					// comptD;
-					//comptD++;
+					// comptD++;
 				} else if (ligne.indexOf("listD = listD.add") != -1) {
 
-					ligneAddD_BlocDistance = ligneAddD_BlocDistance.substring(0, ligneAddD_BlocDistance.length()-1) + "};";
+					ligneAddD_BlocDistance = ligneAddD_BlocDistance.substring(0, ligneAddD_BlocDistance.length() - 1)
+							+ "};";
 					printwriter.println(ligneAddD_BlocDistance);
 					printwriter.println(ligneAddD);
 					ligneAddD_BlocDistance = "";
 					ligneAddD = "";
 					comptD = 0;
 
-					if (comptListD != 0) {
-						ligneAddListD_D = ligneAddListD_D + "+";
+					if ((comptListD != 0)&&(comptListD != 3)&&(comptListD != 10)&&(comptListD != 43)&&(comptListD != 87)) {
+						ligneAddListD_D = ligneAddListD_D + ",";
 					}
 					ligneAddListD_D = ligneAddListD_D + "d" + comptListD;
 					comptListD++;
-				} else if (ligne.indexOf("list = list.add(listD)")!=-1) {
+				} else if (ligne.indexOf("list = list.add(listD)") != -1) {
 
 					ligneAddListD_D = ligneAddListD_D + "};";
 					printwriter.println(ligneAddListD_D);
 					printwriter.println(ligneAddListD);
 					ligneAddListD_D = "";
 					ligneAddListD = "";
-					comptListD = 0;
 
-					printwriter.println(ligne);
+					printwriter.println(ligne.substring(7,21)+compttttttttttttttttt+ligne.substring(21));
 				}
 
-				if (compt == 2) {
-					printwriter.println("int[][] b;");
-				}
 				// printwriter.println(ligne);
 
 			}
