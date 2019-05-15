@@ -22,13 +22,13 @@ public class ParseDataToListDistance {
 		for (Continent continent : graphe.getContinents()) {
 			ListDistance listDistance = new ListDistance();
 			if (continent.size() == 3) {
-				//listDistance = createListUnContinent(japon, continent);
+				listDistance = createListUnContinent(japon, continent);
 			} else if (continent.size() == 33) {
-				//listDistance = createListUnContinent(ameriqueNord, continent);
+				listDistance = createListUnContinent(ameriqueNord, continent);
 			} else if (continent.size() == 44) {
-				//listDistance = createListUnContinent(ameriqueSud, continent);
+				listDistance = createListUnContinent(ameriqueSud, continent);
 			} else if (continent.size() == 7) {
-				//listDistance = createListUnContinent(antartic, continent);
+				listDistance = createListUnContinent(antartic, continent);
 			} else if (continent.size() == 67) {
 				listDistance = createListUnContinent(eurasie, continent);
 			} else {
