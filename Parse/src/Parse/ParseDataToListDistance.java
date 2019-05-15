@@ -22,15 +22,15 @@ public class ParseDataToListDistance {
 		for (Continent continent : graphe.getContinents()) {
 			ListDistance listDistance = new ListDistance();
 			if (continent.size() == 3) {
-				listDistance = createListUnContinent(japon, continent);
+				//listDistance = createListUnContinent(japon, continent);
 			} else if (continent.size() == 33) {
-				listDistance = createListUnContinent(ameriqueNord, continent);
+				//listDistance = createListUnContinent(ameriqueNord, continent);
 			} else if (continent.size() == 44) {
 				listDistance = createListUnContinent(ameriqueSud, continent);
 			} else if (continent.size() == 7) {
-				listDistance = createListUnContinent(antartic, continent);
+				//listDistance = createListUnContinent(antartic, continent);
 			} else if (continent.size() == 67) {
-				listDistance = createListUnContinent(eurasie, continent);
+				//listDistance = createListUnContinent(eurasie, continent);
 			} else {
 				System.out.println("pb : size = " + continent.size());
 			}
@@ -68,7 +68,7 @@ public class ParseDataToListDistance {
 
 	public static int parcour(int idCherche, int idPos, Continent continent, ArrayList<Integer> parcouru, int compt) {
 		parcouru.add(idPos);
-		if (compt > 13) {
+		if (compt > 3) {
 			return -1;
 		}
 		if (continent.getCelluleById(idPos).getVoisins().contains(idCherche)) {

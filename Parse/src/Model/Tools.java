@@ -9,15 +9,28 @@ public class Tools {
 	static List<Integer> ameriqueDuS;
 	static List<Integer> antarct;
 
-	public static int destination(int idCellule, Graphe graphe) { // Déplacement sur un voisin au hasard
+	public static int destination(int idCellule, Graphe graphe) {
+		// Déplacement sur un voisin au hasard
 		Random rand = new Random();
 		int arrivee = graphe.getCelluleById(idCellule)
 				.getVoisin(rand.nextInt(graphe.getCelluleById(idCellule).nbVoisins()));
 		return arrivee;
 	}
 
+<<<<<<< HEAD
+=======
+	public static int positionAlea(Graphe graphe) {
+		// On récupère une cellule au hasard sur le graphe
+		Random rand = new Random();
+		int pos = graphe.getCellule(rand.nextInt(graphe.sizeCellule())).getId();
+		return pos;
+	}
 
-	public static Graphe splitContinent(Continent continent) { // Initialisation des continents
+	// static int[] classementCellulesDepart(Graphe graphe){}
+>>>>>>> origin/travail_thomas
+
+	public static Graphe splitContinent(Continent continent) {
+		// Initialisation des continents
 		Graphe graphe = new Graphe();
 		Continent ameriqueDuNord = new Continent(0);
 		Continent ameriqueDuSudAfrique = new Continent(1);
@@ -51,7 +64,8 @@ public class Tools {
 		return graphe;
 	}
 
-	public static void remplirListIDContinent() { // Suite de l'initialisation des continents
+	public static void remplirListIDContinent() {
+		// Suite de l'initialisation des continents
 		Integer[] j = new Integer[] { 143, 149, 150 };
 		Integer[] an = new Integer[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23,
 				27, 28, 29, 37, 38, 43, 46, 47, 48, 49 };
@@ -64,24 +78,6 @@ public class Tools {
 		antarct = Arrays.asList(ant);
 
 	}
-
-	/*
-	 * static void miseAJourNonConquis(ArrayList<int> cellulesNonConquises, Graphe
-	 * graphe){ ArrayList<Integer> supp = new ArrayList<Integer>(); for(Continent
-	 * continent : grapheNonConquis.getContinents()){ for(Cellule cellule :
-	 * continent.getCellules()){
-	 * if((graphe.getCellule(cellule.getId()).getControl())!=-1){
-	 * supp.add(cellule.getId()); } } } for(int id : supp){
-	 * grapheNonConquis.removeCelluleById(id); } }
-	 */
-
-	/*
-	 * static void miseAJourPossessions(ArrayList<int[]> listInfosTempsReel,Graphe
-	 * graphe){ //Plus adapté à la nouvelle modélisation for(int i = 0; i <
-	 * graphe.sizeCellule();i++ ){
-	 * graphe.getCellule(i).setControl(listInfosTempsReel.get(graphe.getCellule(i).
-	 * getId())[1]); } }
-	 */
 
 	public static void miseAJourContinent(Graphe graphe) {
 		ArrayList<Integer> supp = new ArrayList<Integer>();
@@ -118,7 +114,11 @@ public class Tools {
 			if (premierTour) {
 				sortie = nouveauPlacement1v1PremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
 			} else {
-				sortie = nouveauPlacement1v1(nbMaxCree, cellulesNonConquises, graphe, myId);
+				if (premierTour) {
+					sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
+				} else {
+					sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
+				}
 			}
 
 		} else {
@@ -126,7 +126,8 @@ public class Tools {
 				sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises, graphe, myId);
 			} else {
 				sortie = nouveauPlacementMulti(nbMaxCree, cellulesNonConquises, graphe, myId);
-				// sortie = nouveauPlacementMultiPremierTour(nbMaxCree, cellulesNonConquises,
+				// sortie = nouveauPlacementMultiPremierTour(nbMaxCree,
+				// cellulesNonConquises,
 				// graphe, myId);
 			}
 
@@ -139,14 +140,11 @@ public class Tools {
 		String sortie = "";
 		int compteur = 0;
 		while (nbMaxCree != 0) {
-			if ((!cellulesNonConquises.isEmpty()) && cellulesNonConquises.size() > compteur) { // Tant qu'il reste des
-																								// cellules non
-																								// conquises on se place
-																								// dessus, on vise en
-																								// prorité celles qui
-																								// ont le plus de
-																								// platinum (liste
-																								// triée)
+			if ((!cellulesNonConquises.isEmpty()) && cellulesNonConquises.size() > compteur) {
+				// Tant qu'il reste des cellules non conquises on se place
+				// dessus, on
+				// vise en prorité celles qui ont le plus de platinum (liste
+				// triée)
 				sortie = sortie + " 1 " + String.valueOf(cellulesNonConquises.get(compteur));
 				nbMaxCree--;
 				compteur++;
@@ -182,8 +180,13 @@ public class Tools {
 		return tableauTrie;
 	}
 
+<<<<<<< HEAD
 	public static int position(Graphe graphe, int myId, Boolean bool) { // On récupère une cellule au hasard sur
 																				// le graphe
+=======
+	public static int positionAleaV2(Graphe graphe, int myId, Boolean bool) {
+		// On récupère une cellule au hasard sur le graphe
+>>>>>>> origin/travail_thomas
 		Graphe grapheLocal = new Graphe(graphe);
 		if (bool) {
 			for (Continent continent : graphe.getContinents()) {
@@ -222,14 +225,23 @@ public class Tools {
 			mesCellules = mesCellulesEnBordure;
 		}
 		
+		 
+		
+		if(!mesCellulesEnBordure.isEmpty()) {
+			mesCellules = mesCellulesEnBordure;
+		}
+		
+		
 		
 		Random rand = new Random();
 		int id = mesCellules.get(rand.nextInt(mesCellules.size()));
 		return id;
 	}
 
-	// Pour n ième plus grande mine non conquise (n = parcourtNonConquis) on trouve
-	// un voisin libre et on s'y implante si ce n'est pas possible on se place sur
+	// Pour n ième plus grande mine non conquise (n = parcourtNonConquis) on
+	// trouve
+	// un voisin libre et on s'y implante si ce n'est pas possible on se place
+	// sur
 	// la mine directement
 	public static int takeProcheGrandeMine(ArrayList<Integer> cellulesNonConquises, int parcourtNonConquis,
 			Graphe graphe) {
@@ -261,14 +273,17 @@ public class Tools {
 		int parcourtNonConquis = 0;
 		for (int i = 0; i < nbMaxCree; i++) {
 
-			// Si toutes les cellules sont possédées on se place aléatoirement sur l'une
+			// Si toutes les cellules sont possédées on se place aléatoirement
+			// sur l'une
 			// des notres hormis sur un continent inexploitable.
 
 			if (cellulesNonConquises.isEmpty()) {
 				sortie = sortie + " 1 " + String.valueOf(Tools.position(graphe, myId, true));
 			}
-			// On se place sur les meilleurs mines non conquises, si on a plus de robots que
-			// de cellules non conquises les meilleures pourront en recevoir plusieurs
+			// On se place sur les meilleurs mines non conquises, si on a plus
+			// de robots que
+			// de cellules non conquises les meilleures pourront en recevoir
+			// plusieurs
 			if (parcourtNonConquis >= cellulesNonConquises.size()) {
 				parcourtNonConquis = 0;
 			}
@@ -283,7 +298,8 @@ public class Tools {
 		return sortie;
 	}
 
-	// Permet de créer la liste des cellules non conquises du meilleur continent au
+	// Permet de créer la liste des cellules non conquises du meilleur continent
+	// au
 	// moins bon, cela nous permettra d'avoir les cellules classées par platinum
 	// puis par densité du continent
 	public static ArrayList<Integer> CreeCellulesNonConquisesParContinent(Graphe graphe) {

@@ -16,19 +16,25 @@ public class Player {
 
 		Tools.remplirListIDContinent();
 		Scanner in = new Scanner(System.in);
-		int playerCount = in.nextInt(); // Nombre de joueurs (2 à 4)
-		int myId = in.nextInt(); // Notre ID
-		int zoneCount = in.nextInt(); // Nombre de cellules
-		int linkCount = in.nextInt(); // Nombre de frontières
+		int playerCount = in.nextInt();
+		// Nombre de joueurs (2 à 4)
+		int myId = in.nextInt();
+		// Notre ID
+		int zoneCount = in.nextInt();
+		// Nombre de cellules
+		int linkCount = in.nextInt();
+		// Nombre de frontières
 		int zoneId;
 		int platinumSource;
 		Continent pangee = new Continent();
 
 		// Création des cellules et ajout à la pangée
 		for (i = 0; i < zoneCount; i++) {
-			zoneId = in.nextInt(); // On récupère un ID de cellule
-			//cellulesNonConquises.add(zoneId);
-			platinumSource = in.nextInt(); // Et son nombre de platinum
+			zoneId = in.nextInt();
+			// On récupère un ID de cellule
+			// cellulesNonConquises.add(zoneId);
+			platinumSource = in.nextInt();
+			// Et son nombre de platinum
 			Cellule cellule = new Cellule(zoneId, platinumSource);
 			pangee.addCellule(cellule);
 		}
@@ -48,22 +54,27 @@ public class Player {
 		for (i = 0; i < pangee.size(); i++) {
 			pangee.triVoisinDe(i);
 		}
-		
-		Graphe graphe = Tools.splitContinent(pangee);
 
+		Graphe graphe = Tools.splitContinent(pangee);
 
 		for (Continent continent : graphe.getContinents()) {
 			continent.calculDensitePlatinum();
 			continent.triParPlatinum();
 		}
-		
+
 		cellulesNonConquises = Tools.CreeCellulesNonConquisesParContinent(graphe);
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
+		
+		ArrayList<ListD> list =CreerD.creer();
+		
+		
+		
 		//////////////// PROCEDURE A CHAQUE TOUR
 		//////////////// /////////////////////////////////////////
 
-		int zID; // L'ID de la cellule qu'on manipulera
+		int zID;
+		// L'ID de la cellule qu'on manipulera
 		int myPlatinum;
 		String deplacementStr;
 		Cellule cellule;
@@ -78,10 +89,12 @@ public class Player {
 
 			////// PHASE DE RECUPERATION DE DONNEES //////
 
-			myPlatinum = in.nextInt(); // Mon platinum
+			myPlatinum = in.nextInt();
+			// Mon platinum
 			for (i = 0; i < zoneCount; i++) {
 
-				zID = in.nextInt(); // On récupère l'ID de la cellule
+				zID = in.nextInt();
+				// On récupère l'ID de la cellule
 				graphe.getCelluleById(i).setControl(in.nextInt());
 				if ((graphe.getCelluleById(i).getControl() != -1)) {
 					for (j = 0; j < cellulesNonConquises.size(); j++) {
@@ -96,8 +109,6 @@ public class Player {
 					graphe.getCelluleById(i).setRobots(in.nextInt(), j);
 				}
 			}
-			
-			
 
 			////////// PHASE DE DEPLACEMENT ////////////
 
@@ -113,12 +124,9 @@ public class Player {
 						// Pour chaque robot
 						for (i = 0; i < cellule.getRobots(myId); i++) {
 
-							arrivee = Tools.destination(cellule.getId(), graphe); // On
-																					// récupère
-																					// un
-																					// voisin
-																					// aléatoirement
-							// Pour chaque voisin de notre cellule
+							arrivee = Tools.destination(cellule.getId(), graphe);
+							// On récupère un voisin aléatoirement Pour chaque
+							// voisin de notre cellule
 							for (l = 0; l < cellule.nbVoisins(); l++) {
 								voisin = cellule.getVoisin(l);
 								// Si nous ne sommes pas propriétaire de la
@@ -133,13 +141,8 @@ public class Player {
 								}
 							}
 
-							deplacementStr = deplacementStr + " " + 1 + " " + cellule.getId() + " " + arrivee; // On
-																												// déplace
-																												// un
-																												// robot
-																												// à
-																												// la
-																												// fois
+							deplacementStr = deplacementStr + " " + 1 + " " + cellule.getId() + " " + arrivee;
+							// On déplace un robot à la fois
 
 						}
 					}
@@ -162,8 +165,8 @@ public class Player {
 			}
 
 			System.out.println(placement);
-			
-			if(premierTour) {
+
+			if (premierTour) {
 				premierTour = false;
 			}
 		}

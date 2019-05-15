@@ -1,12 +1,7 @@
 package Parse;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
 import Model.*;
 
@@ -14,7 +9,7 @@ public class ParseListDistanceToTexte {
 
 	public static void parse(ArrayList<ListDistance> list) {
 
-		String f = "C:/DATA/ISIC/PDR/PDR/listeDistanceEurasie.txt";
+		String f = "C:/DATA/ISIC/PDR/PDR/listeDistanceAmeriqueSud.txt";
 
 		String ligne = "";
 
