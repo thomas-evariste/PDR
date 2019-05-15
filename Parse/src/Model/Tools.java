@@ -207,7 +207,29 @@ public class Tools {
 				}
 			}
 		}
-
+		
+		ArrayList<Integer> voisins = new ArrayList<Integer>();
+		ArrayList<Integer> mesCellulesEnBordure = new ArrayList<Integer>();
+		Boolean unVoisinEnnemi = false;
+		for(int i=0; i<mesCellules.size();i++) {
+			unVoisinEnnemi = false;
+			voisins = graphe.getCelluleById(mesCellules.get(i)).getVoisins();
+			for(int voisin : voisins) {
+				if(graphe.getCelluleById(voisin).getControl() != myId) {
+					unVoisinEnnemi = true;
+				}
+			}
+			if(unVoisinEnnemi) {
+				mesCellulesEnBordure.add(mesCellules.get(i));
+			}
+			
+		}
+		
+		if(!mesCellulesEnBordure.isEmpty()) {
+			mesCellules = mesCellulesEnBordure;
+		}
+		
+		
 		Random rand = new Random();
 		int id = mesCellules.get(rand.nextInt(mesCellules.size()));
 		return id;
