@@ -39,7 +39,7 @@ c.triParPlatinum();
 }
 cesNonConquises=Tools.CreeCEsNonConquisesParC(gg);
 cesNonConquises=Tools.triCEsNonConquises(cesNonConquises, gg);
-ArrayList<ListD>list=CreerD.creer();
+ArrayList<ListD>matriceDesDistances=CreerD.creer();
 int zID;
 int myPlatinum;
 String deplacementStr;
@@ -69,14 +69,19 @@ gg.getCEById(i).setRobots(in.nextInt(), j);
 }
 }
 deplacementStr="";
+arrivee=-1;
 for(j=0;j<gg.size();j++){
 c=gg.getC(j);
 for(k=0;k<c.size();k++){
 ce=c.getCE(k);
 if(ce.getRobots(myId) !=0){
 deplacement.clear();
+arrivee=-1;
 for(i=0;i<ce.getRobots(myId);i++){
+int[] cible=Tools.plusProcheNonPossede(ce, gg, myId, matriceDesDistances, c);
+if(cible[0]==-1){
 arrivee=Tools.destination(ce.getId(), gg);
+}
 for(l=0;l<ce.nbVoisins();l++){
 voisin=ce.getVoisin(l);
 if((gg.getCEById(voisin).getControl() !=myId)
@@ -85,6 +90,19 @@ arrivee=voisin;
 deplacement.add(arrivee);
 break;
 }
+}
+int distanceVoisin=-1;
+if(arrivee==-1){
+for(int unVoisin:ce.getVoisins()){
+distanceVoisin=Tools.plusProcheNonPossede(gg.getCE(unVoisin), gg, myId, matriceDesDistances, c)[1];
+if(distanceVoisin<cible[1]){
+arrivee=unVoisin;
+break;
+}
+}
+}
+if(arrivee==-1){
+arrivee=Tools.destination(ce.getId(), gg);
 }
 deplacementStr=deplacementStr+" "+1+" "+ce.getId()+" "+arrivee;
 }
@@ -119,18 +137,13 @@ int arrivee=gg.getCEById(idCE)
 .getVoisin(rand.nextInt(gg.getCEById(idCE).nbVoisins()));
 return arrivee;
 }
-static int positionAlea(GG gg){
-Random rand=new Random();
-int pos=gg.getCE(rand.nextInt(gg.sizeCE())).getId();
-return pos;
-}
 static GG splitC(C c){
 GG gg=new GG();
-C ameriqueDuNord=new C(0);
-C ameriqueDuSudAfrique=new C(1);
-C antarctique=new C(2);
-C europeAsieOceanie=new C(3);
-C japon=new C(4);
+C ameriqueDuNord=new C(2);
+C ameriqueDuSudAfrique=new C(3);
+C antarctique=new C(1);
+C europeAsieOceanie=new C(4);
+C japon=new C(0);
 CE ce;
 int i;
 for(i=0;i<c.size();i++){
@@ -148,11 +161,11 @@ japon.addCE(ce);
 europeAsieOceanie.addCE(ce);
 }
 }
+gg.addC(japon);
+gg.addC(antarctique);
 gg.addC(ameriqueDuNord);
 gg.addC(ameriqueDuSudAfrique);
-gg.addC(antarctique);
 gg.addC(europeAsieOceanie);
-gg.addC(japon);
 return gg;
 }
 static void remplirListIDC(){
@@ -167,7 +180,7 @@ ameriqueDuN=Arrays.asList(an);
 ameriqueDuS=Arrays.asList(as);
 antarct=Arrays.asList(ant);
 }
-static void miseAJourC(GG gg){
+static void miseAJourGG(GG gg){
 ArrayList<Integer>supp=new ArrayList<Integer>();
 C c;
 int j;
@@ -182,15 +195,6 @@ for(j=0;j<supp.size();j++){
 s=supp.get(j);
 gg.removeCById(s);
 }
-}
-static void miseAJourGG(GG gg){
-miseAJourC(gg);
-}
-static int takeRandom(ArrayList<Integer>liste){
-int taille=liste.size();
-Random rand=new Random();
-int hasard=rand.nextInt(taille);
-return liste.get(hasard);
 }
 static String nouveauPlacement(int nbMaxCree, int playerCount, ArrayList<Integer>cesNonConquises,
 GG gg, int myId, boolean premierTour){
@@ -224,7 +228,7 @@ sortie=sortie+" 1 "+String.valueOf(cesNonConquises.get(compteur));
 nbMaxCree--;
 compteur++;
 } else{
-sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(gg, myId, true));
+sortie=sortie+" 1 "+String.valueOf(Tools.position(gg, myId, true));
 nbMaxCree--;
 }
 }
@@ -251,7 +255,7 @@ tableauTrie.add(cesNonConquises.get(j));
 }
 return tableauTrie;
 }
-static int positionAleaV2(GG gg, int myId, Boolean bool){
+static int position(GG gg, int myId, Boolean bool){ 
 GG ggLocal=new GG(gg);
 if(bool){
 for(C c:gg.getCs()){
@@ -322,7 +326,7 @@ String sortie="";
 int parcourtNonConquis=0;
 for(int i=0;i<nbMaxCree;i++){
 if(cesNonConquises.isEmpty()){
-sortie=sortie+" 1 "+String.valueOf(Tools.positionAleaV2(gg, myId, true));
+sortie=sortie+" 1 "+String.valueOf(Tools.position(gg, myId, true));
 }
 if(parcourtNonConquis>=cesNonConquises.size()){
 parcourtNonConquis=0;
@@ -358,7 +362,6 @@ compteurFinal=compteur;
 compteur++;
 }
 idCsClasses.add(idCMax);
-System.err.println(""+idCMax);
 idCs.remove(compteurFinal);
 max=-1;
 idCMax=-1;
@@ -371,6 +374,26 @@ cesNonConquises.add(uneCE.getId());
 }
 }
 return cesNonConquises;
+}
+static int[] plusProcheNonPossede(CE ce, GG gg, int myId, ArrayList<ListD>matriceDesDistances, C c){
+int idCE=ce.getId();
+int compteur=0;
+int[] nonTrouve={-1,-1};
+ListD matriceC=matriceDesDistances.get(c.getId());
+D matriceCE=matriceC.getById(idCE);
+if(matriceCE.getDists().length==0 ){
+return nonTrouve;
+}
+for(int[] tab:matriceCE.getDists()){
+compteur++;
+for(int id:tab){
+if(gg.getCEById(id).getControl() !=myId){
+int[] sortie={id,compteur};
+return sortie;
+}
+}
+}
+return nonTrouve;
 }
 }
 class GG{
@@ -601,13 +624,13 @@ return ces.size();
 Boolean isEmpty(){
 return ces.isEmpty();
 }
-void triVoisinDe(int id){ 
+void triVoisinDe(int id){
 ArrayList<Integer>voisin=this.getCEById(id).getVoisins();
 ArrayList<Integer>voisinTrie=new ArrayList<Integer>();
 int i;
 int j;
 for(i=0;i<7;i++){
-for(j=voisin.size()-1;j>=0;j--){
+for(j=voisin.size() - 1;j>=0;j--){
 if(this.getCEById(voisin.get(j)).getPlatinum()==(6 - i)){
 voisinTrie.add(voisin.get(j));
 }
@@ -677,8 +700,7 @@ for(int j=0;j<ces.size();j++){
 if(getCE(j).getControl() !=-1){
 if(getCE(j).getControl()==myId){
 compteur[0]++;
-}
-else{
+} else{
 compteur[1]++;
 }
 }
@@ -796,12 +818,26 @@ return distances;
 D getDistance(int num){
 return distances[num];
 }
+D getById(int id){
+D dVide=new D();
+D monD;
+int j;
+for(j=0;j<distances.length;j++){
+monD=distances[j];
+if(id==monD.getId()){
+return monD;
+}
+}
+System.err.println("Je renvoie un D vide");
+return dVide;
+}
 }
 class D{
 private int id;
 private int[][] dists;
 D(){
 id=-1;
+dists=new int[0][0];
 }
 D(int id){
 this.id=id;

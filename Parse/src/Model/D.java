@@ -5,17 +5,18 @@ public class D {
 	private int id;
 	private int[][] dists;
 
-	public D(){
-		id=-1;
+	public D() {
+		id = -1;
+		dists = new int[0][0];
 	}
 
-	public D(int id){
-		this.id=id;
+	public D(int id) {
+		this.id = id;
 	}
 
-	public D(int id, int[][] dists){
-		this.id=id;
-		this.dists=dists;
+	public D(int id, int[][] dists) {
+		this.id = id;
+		this.dists = dists;
 	}
 
 	public void setId(int id) {
@@ -37,7 +38,6 @@ public class D {
 	public int getId() {
 		return id;
 	}
-
 
 	public int size() {
 		return dists.length;

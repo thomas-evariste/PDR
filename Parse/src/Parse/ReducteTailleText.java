@@ -13,13 +13,13 @@ public class ReducteTailleText {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String f = "C:/DATA/ISIC/PDR/PDR/listeDistance.txt";
+		String f = "C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistance.txt";
 
 		try {
 
 			PrintWriter printwriter = new PrintWriter(new FileOutputStream(f));
 
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceFinalSave.txt", printwriter);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceFinalSave.txt", printwriter);
 			
 
 			printwriter.close();

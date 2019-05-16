@@ -6,13 +6,13 @@ public class ParseListDistanceToNewModel {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String f = "C:/DATA/ISIC/PDR/PDR/listeDistanceNewModel.txt";
+		String f = "C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceNewModel.txt";
 
 		try {
 
 			PrintWriter printwriter = new PrintWriter(new FileOutputStream(f));
 
-			write("C:/DATA/ISIC/PDR/PDR/listeDistance.txt", printwriter);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistance.txt", printwriter);
 
 			printwriter.close();
 		}

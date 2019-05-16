@@ -17,7 +17,7 @@ public class ParseAllTextListDistanceToOne {
 
 	public static void main(String[] args) {
 
-		String f = "C:/DATA/ISIC/PDR/PDR/listeDistanceFinal.txt";
+		String f = "C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceFinal.txt";
 		String s1 = "ArrayList<ListDistance> list = new ArrayList<ListDistance>();";
 		String s2 = "ListDistance listDistance = new ListDistance();";
 		String s3 = "list = list.add(listDistance) ;";
@@ -36,26 +36,28 @@ public class ParseAllTextListDistanceToOne {
 			printwriter.println(s1);
 
 			printwriter.println(s2);
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceJapon.txt", printwriter, s1, s2, s3);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceAmeriqueNord.txt", printwriter,s1 , s2, s3);
 			printwriter.println(s3);
 			
 			printwriter.println(s2);
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceAntartique.txt", printwriter,s1 , s2, s3);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceAmeriqueSud.txt", printwriter,s1 , s2, s3);
 			printwriter.println(s3);
 			
 			printwriter.println(s2);
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceAmeriqueNord.txt", printwriter,s1 , s2, s3);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceAntartique.txt", printwriter,s1 , s2, s3);
 			printwriter.println(s3);
 			
 			printwriter.println(s2);
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceAmeriqueSud.txt", printwriter,s1 , s2, s3);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceEurasie.txt", printwriter,s1 , s2, s3);
 			printwriter.println(s3);
 			
 			printwriter.println(s2);
-			write("C:/DATA/ISIC/PDR/PDR/listeDistanceEurasie.txt", printwriter,s1 , s2, s3);
+			write("C:/Users/simon/OneDrive/Bureau/ISIC/PDR/listeDistanceJapon.txt", printwriter, s1, s2, s3);
 			printwriter.println(s3);
 			
-
+			
+			
+			
 			printwriter.println("return list;");
 			printwriter.println("}");
 			printwriter.println("}");

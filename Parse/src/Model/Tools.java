@@ -20,11 +20,11 @@ public class Tools {
 	public static Graphe splitContinent(Continent continent) {
 		// Initialisation des continents
 		Graphe graphe = new Graphe();
-		Continent ameriqueDuNord = new Continent(0);
-		Continent ameriqueDuSudAfrique = new Continent(1);
-		Continent antarctique = new Continent(2);
-		Continent europeAsieOceanie = new Continent(3);
-		Continent japon = new Continent(4);
+		Continent ameriqueDuNord = new Continent(2);
+		Continent ameriqueDuSudAfrique = new Continent(3);
+		Continent antarctique = new Continent(1);
+		Continent europeAsieOceanie = new Continent(4);
+		Continent japon = new Continent(0);
 		Cellule cellule;
 		int i;
 		for (i = 0; i < continent.size(); i++) {
@@ -43,11 +43,14 @@ public class Tools {
 				europeAsieOceanie.addCellule(cellule);
 			}
 		}
+		
+		graphe.addContinent(japon);
+		graphe.addContinent(antarctique);
 		graphe.addContinent(ameriqueDuNord);
 		graphe.addContinent(ameriqueDuSudAfrique);
-		graphe.addContinent(antarctique);
 		graphe.addContinent(europeAsieOceanie);
-		graphe.addContinent(japon);
+
+
 
 		return graphe;
 	}
@@ -297,7 +300,6 @@ public class Tools {
 				compteur++;
 			}
 			idContinentsClasses.add(idContinentMax);
-			System.err.println("" + idContinentMax);
 			idContinents.remove(compteurFinal);
 			max = -1;
 			idContinentMax = -1;
@@ -313,6 +315,28 @@ public class Tools {
 		}
 
 		return cellulesNonConquises;
+	}
+	
+	public static int[] plusProcheNonPossede(Cellule cellule, Graphe graphe, int myId, ArrayList<ListD> matriceDesDistances, Continent continent) {
+		int idCellule = cellule.getId();
+		int compteur = 0;
+		int[] nonTrouve = {-1,-1};
+		ListD matriceContinent = matriceDesDistances.get(continent.getId());
+		D matriceCellule = matriceContinent.getById(idCellule);
+		if(matriceCellule.getDists().length == 0 ) {
+			return nonTrouve;
+		}
+		for(int[] tab : matriceCellule.getDists()) {
+			compteur++;
+			for(int id : tab) {
+				if(graphe.getCelluleById(id).getControl() != myId) {
+					int[] sortie = {id,compteur};
+					return sortie;
+				}
+			}
+		}
+		
+		return nonTrouve;
 	}
 
 }

@@ -66,7 +66,7 @@ public class Player {
 		cellulesNonConquises = Tools.triCellulesNonConquises(cellulesNonConquises, graphe);
 
 		
-		ArrayList<ListD> list =CreerD.creer();
+		ArrayList<ListD> matriceDesDistances =CreerD.creer();
 		
 		
 		
@@ -113,7 +113,8 @@ public class Player {
 			////////// PHASE DE DEPLACEMENT ////////////
 
 			deplacementStr = "";
-
+			arrivee = -1;
+			
 			for (j = 0; j < graphe.size(); j++) {
 				continent = graphe.getContinent(j);
 				for (k = 0; k < continent.size(); k++) {
@@ -121,12 +122,18 @@ public class Player {
 					// Si on a au moins un robot disponible sur la cellule
 					if (cellule.getRobots(myId) != 0) {
 						deplacement.clear();
+						arrivee = -1;
 						// Pour chaque robot
 						for (i = 0; i < cellule.getRobots(myId); i++) {
-
-							arrivee = Tools.destination(cellule.getId(), graphe);
-							// On récupère un voisin aléatoirement Pour chaque
-							// voisin de notre cellule
+							int[] cible = Tools.plusProcheNonPossede(cellule, graphe, myId, matriceDesDistances, continent);
+							//Si on ne trouve pas on récupère un voisin aléatoirement de notre cellule
+							if(cible[0] == -1) {
+								arrivee = Tools.destination(cellule.getId(), graphe);
+							}
+							
+							
+							
+							
 							for (l = 0; l < cellule.nbVoisins(); l++) {
 								voisin = cellule.getVoisin(l);
 								// Si nous ne sommes pas propriétaire de la
@@ -140,6 +147,24 @@ public class Player {
 									break;
 								}
 							}
+							
+							int distanceVoisin = -1;
+							if(arrivee == -1) {
+								for(int unVoisin : cellule.getVoisins()) {
+									distanceVoisin = Tools.plusProcheNonPossede(graphe.getCellule(unVoisin), graphe, myId, matriceDesDistances, continent)[1];
+									if(distanceVoisin < cible[1]) {
+										arrivee = unVoisin;
+										break;
+									}
+								}
+							}
+							
+							if(arrivee == -1) {
+								arrivee = Tools.destination(cellule.getId(), graphe);
+							}
+							
+							
+							
 
 							deplacementStr = deplacementStr + " " + 1 + " " + cellule.getId() + " " + arrivee;
 							// On déplace un robot à la fois
